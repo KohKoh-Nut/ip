@@ -1,5 +1,8 @@
 import java.util.Scanner;
 
+import commands.Command;
+import tasks.TaskList;
+
 /** Runs Zabud, a command-line assistant that stores tasks for the current session. */
 public class Zabud {
     /** The line printed between sections of the command-line interface. */

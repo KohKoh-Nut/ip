@@ -1,3 +1,5 @@
+package tasks;
+
 /** Represents a task that occurs between a start and end time. */
 public class Event extends Task {
     private final String from;

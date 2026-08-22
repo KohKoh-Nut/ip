@@ -1,3 +1,8 @@
+package commands;
+
+import tasks.Task;
+import tasks.TaskList;
+
 /** Provides shared behavior for commands that add a task. */
 public abstract class TaskCommand extends Command {
     /**

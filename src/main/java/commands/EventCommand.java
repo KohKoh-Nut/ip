@@ -1,3 +1,8 @@
+package commands;
+
+import tasks.Event;
+import tasks.TaskList;
+
 /** Adds a task with a start and end time. */
 public class EventCommand extends TaskCommand {
     /** The user input that invokes this command. */

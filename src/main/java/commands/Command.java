@@ -1,3 +1,7 @@
+package commands;
+
+import tasks.TaskList;
+
 /** Defines a command that can validate and act on one line of user input. */
 public abstract class Command {
     /** The complete line entered by the user. */

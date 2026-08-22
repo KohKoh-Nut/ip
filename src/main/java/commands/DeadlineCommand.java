@@ -1,3 +1,8 @@
+package commands;
+
+import tasks.Deadline;
+import tasks.TaskList;
+
 /** Adds a task with a deadline. */
 public class DeadlineCommand extends TaskCommand {
     /** The user input that invokes this command. */

@@ -1,3 +1,5 @@
+package tasks;
+
 /** Stores the tasks entered during one Zabud session. */
 public class TaskList {
     /** The maximum number of tasks in one session. */
