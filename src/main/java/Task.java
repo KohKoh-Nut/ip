@@ -1,7 +1,7 @@
 /**
  * Represents a task and whether it has been completed.
  */
-public class Task {
+public abstract class Task {
     /** The text describing this task. */
     protected String description;
 
@@ -44,5 +44,20 @@ public class Task {
      */
     public String getStatusIcon() {
         return isDone ? "X" : " ";
+    }
+
+    /** Returns the single-letter code that identifies this task type. */
+    protected abstract String getTaskType();
+
+    /** Returns the task-specific information shown after its description. */
+    protected String getAdditionalDetails() {
+        return "";
+    }
+
+    /** Returns this task in the Duke list format. */
+    @Override
+    public String toString() {
+        return "[" + getTaskType() + "][" + getStatusIcon() + "] "
+                + description + getAdditionalDetails();
     }
 }
