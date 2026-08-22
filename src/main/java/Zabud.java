@@ -47,9 +47,9 @@ public class Zabud {
                     }
 
                     int taskIndex = taskNumber - 1;
-                    session.completed[taskIndex] = true;
+                    session.tasks[taskIndex].markAsDone();
                     System.out.println(" Nice! I've marked this task as done:");
-                    System.out.println("   [X] " + session.tasks[taskIndex]);
+                    System.out.println("   [X] " + session.tasks[taskIndex].getDescription());
                 } catch (NumberFormatException | StringIndexOutOfBoundsException exception) {
                     System.out.println(" Please specify a valid task number.");
                 }
@@ -69,9 +69,9 @@ public class Zabud {
                     }
 
                     int taskIndex = taskNumber - 1;
-                    session.completed[taskIndex] = false;
+                    session.tasks[taskIndex].markAsNotDone();
                     System.out.println(" OK, I've marked this task as not done yet:");
-                    System.out.println("   [ ] " + session.tasks[taskIndex]);
+                    System.out.println("   [ ] " + session.tasks[taskIndex].getDescription());
                 } catch (NumberFormatException | StringIndexOutOfBoundsException exception) {
                     System.out.println(" Please specify a valid task number.");
                 }
@@ -84,7 +84,7 @@ public class Zabud {
             @Override
             boolean execute(Session session, String input) {
                 if (session.taskCount < MAX_TASKS) {
-                    session.tasks[session.taskCount] = input;
+                    session.tasks[session.taskCount] = new Task(input);
                     session.taskCount++;
                     System.out.println(" added: " + input);
                 } else {
@@ -126,10 +126,7 @@ public class Zabud {
     /** Stores the mutable state shared by command actions during one session. */
     private static final class Session {
         /** Tasks in the order in which they were entered. */
-        private final String[] tasks = new String[MAX_TASKS];
-
-        /** Completion state corresponding to each task in {@link #tasks}. */
-        private final boolean[] completed = new boolean[MAX_TASKS];
+        private final Task[] tasks = new Task[MAX_TASKS];
 
         /** Number of occupied elements in {@link #tasks}. */
         private int taskCount;
@@ -181,8 +178,9 @@ public class Zabud {
     private static void printTasks(Session session) {
         System.out.println(" Here are the tasks in your list:");
         for (int i = 0; i < session.taskCount; i++) {
-            String marker = session.completed[i] ? "X" : " ";
-            System.out.println(" " + (i + 1) + ".[" + marker + "] " + session.tasks[i]);
+            Task task = session.tasks[i];
+            System.out.println(" " + (i + 1) + ".[" + task.getStatusIcon() + "] "
+                    + task.getDescription());
         }
     }
 
