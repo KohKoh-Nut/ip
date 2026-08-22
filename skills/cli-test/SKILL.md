@@ -29,6 +29,7 @@ Test the command-line application as a user would, trying to expose incorrect ou
 ## Java CLI guidance
 
 - Prefer compiling into `/tmp` so generated `.class` files do not enter the repository.
+- Compile all Java source files recursively when the project uses source subfolders.
 - Use Java 25 when available, as required by this project.
 - Test EOF as well as the normal exit command.
 - Verify state transitions independently from display formatting.
