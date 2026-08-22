@@ -39,7 +39,42 @@ public class Zabud {
         MARK {
             @Override
             boolean execute(Session session, String input) {
-                markTask(session, input);
+                try {
+                    int taskNumber = Integer.parseInt(input.substring("mark ".length()).trim());
+                    if (taskNumber < 1 || taskNumber > session.taskCount) {
+                        System.out.println(" Task number is out of range.");
+                        return true;
+                    }
+
+                    int taskIndex = taskNumber - 1;
+                    session.completed[taskIndex] = true;
+                    System.out.println(" Nice! I've marked this task as done:");
+                    System.out.println("   [X] " + session.tasks[taskIndex]);
+                } catch (NumberFormatException | StringIndexOutOfBoundsException exception) {
+                    System.out.println(" Please specify a valid task number.");
+                }
+                return true;
+            }
+        },
+
+        /** Marks the task selected by the user as not done. */
+        UNMARK {
+            @Override
+            boolean execute(Session session, String input) {
+                try {
+                    int taskNumber = Integer.parseInt(input.substring("unmark ".length()).trim());
+                    if (taskNumber < 1 || taskNumber > session.taskCount) {
+                        System.out.println(" Task number is out of range.");
+                        return true;
+                    }
+
+                    int taskIndex = taskNumber - 1;
+                    session.completed[taskIndex] = false;
+                    System.out.println(" OK, I've marked this task as not done yet:");
+                    System.out.println("   [ ] " + session.tasks[taskIndex]);
+                } catch (NumberFormatException | StringIndexOutOfBoundsException exception) {
+                    System.out.println(" Please specify a valid task number.");
+                }
                 return true;
             }
         },
@@ -81,6 +116,7 @@ public class Zabud {
                 case "bye" -> BYE;
                 case "list" -> LIST;
                 case String command when command.startsWith("mark ") -> MARK;
+                case String command when command.startsWith("unmark ") -> UNMARK;
                 default -> ADD;
             };
             return selectedCommand.execute(session, input);
@@ -147,29 +183,6 @@ public class Zabud {
         for (int i = 0; i < session.taskCount; i++) {
             String marker = session.completed[i] ? "X" : " ";
             System.out.println(" " + (i + 1) + ".[" + marker + "] " + session.tasks[i]);
-        }
-    }
-
-    /**
-     * Marks a task as done based on the one-based number in a {@code mark} command.
-     *
-     * @param session the current session to update
-     * @param input the complete mark command, such as {@code mark 2}
-     */
-    private static void markTask(Session session, String input) {
-        try {
-            int taskNumber = Integer.parseInt(input.substring("mark ".length()).trim());
-            if (taskNumber < 1 || taskNumber > session.taskCount) {
-                System.out.println(" Task number is out of range.");
-                return;
-            }
-
-            int taskIndex = taskNumber - 1;
-            session.completed[taskIndex] = true;
-            System.out.println(" Nice! I've marked this task as done:");
-            System.out.println("   [X] " + session.tasks[taskIndex]);
-        } catch (NumberFormatException | StringIndexOutOfBoundsException exception) {
-            System.out.println(" Please specify a valid task number.");
         }
     }
 
