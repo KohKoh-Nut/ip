@@ -10,7 +10,12 @@ public class TodoCommand extends TaskCommand {
     /** Tokens required after the command name. */
     private static final String[] REQUIRED_TOKENS = {};
 
-    /** Creates a command that adds a to-do task. */
+    /**
+     * Creates a command that adds a to-do task.
+     *
+     * @param input the complete line entered by the user
+     * @param taskList the task list for the current session
+     */
     public TodoCommand(String input, TaskList taskList) { super(input, taskList); }
 
     /** {@inheritDoc} */
@@ -20,6 +25,10 @@ public class TodoCommand extends TaskCommand {
     /** {@inheritDoc} */
     @Override public String hint() { return " Please provide a description after '" + COMMAND + "'."; }
 
-    /** Returns the task description following the command name. */
+    /**
+     * Returns the task description following the command name.
+     *
+     * @return the trimmed task description
+     */
     private String description() { return input.substring(COMMAND.length()).trim(); }
 }

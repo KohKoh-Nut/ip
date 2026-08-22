@@ -11,6 +11,10 @@ public class TaskList {
     /** Number of occupied elements in {@link #tasks}. */
     private int taskCount;
 
+    /** Creates an empty task list. */
+    public TaskList() {
+    }
+
     /**
      * Adds a task when there is remaining capacity.
      *

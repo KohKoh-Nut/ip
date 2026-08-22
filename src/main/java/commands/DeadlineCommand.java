@@ -10,7 +10,12 @@ public class DeadlineCommand extends TaskCommand {
     /** Tokens required after the command name. */
     private static final String[] REQUIRED_TOKENS = {"/by"};
 
-    /** Creates a command that adds a deadline task. */
+    /**
+     * Creates a command that adds a deadline task.
+     *
+     * @param input the complete line entered by the user
+     * @param taskList the task list for the current session
+     */
     public DeadlineCommand(String input, TaskList taskList) { super(input, taskList); }
 
     /** {@inheritDoc} */
@@ -28,7 +33,11 @@ public class DeadlineCommand extends TaskCommand {
         return " Use '" + COMMAND + " DESCRIPTION " + REQUIRED_TOKENS[0] + " WHEN'.";
     }
 
-    /** Splits the description and deadline details around the required token. */
+    /**
+     * Splits the description and deadline details around the required token.
+     *
+     * @return the description and deadline details
+     */
     private String[] details() {
         return input.substring(COMMAND.length()).trim().split(" " + REQUIRED_TOKENS[0] + " ", 2);
     }

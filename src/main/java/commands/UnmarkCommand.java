@@ -10,7 +10,12 @@ public class UnmarkCommand extends Command {
     /** Tokens required after the command name. */
     private static final String[] REQUIRED_TOKENS = {};
 
-    /** Creates a command that marks a task as not done. */
+    /**
+     * Creates a command that marks a task as not done.
+     *
+     * @param input the complete line entered by the user
+     * @param taskList the task list for the current session
+     */
     public UnmarkCommand(String input, TaskList taskList) { super(input, taskList); }
 
     /** {@inheritDoc} */
@@ -27,7 +32,11 @@ public class UnmarkCommand extends Command {
     /** {@inheritDoc} */
     @Override public String hint() { return " Please specify a valid task number."; }
 
-    /** Parses the one-based task number following the command name. */
+    /**
+     * Parses the one-based task number following the command name.
+     *
+     * @return the task number, or {@code -1} if the input is not a number
+     */
     private int taskNumber() {
         try {
             return Integer.parseInt(input.substring(COMMAND.length()).trim());

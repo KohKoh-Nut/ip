@@ -24,13 +24,25 @@ public abstract class Command {
     /** Executes this command's effect. */
     public abstract void execute();
 
-    /** Checks whether this command has valid input. */
+    /**
+     * Checks whether this command has valid input.
+     *
+     * @return whether the command can be executed
+     */
     public abstract boolean check();
 
-    /** Returns guidance shown when {@link #check()} fails. */
+    /**
+     * Returns guidance shown when {@link #check()} fails.
+     *
+     * @return a hint explaining how to correct the input
+     */
     public abstract String hint();
 
-    /** Returns whether this command ends the application session. */
+    /**
+     * Returns whether this command ends the application session.
+     *
+     * @return whether Zabud should stop processing input after this command
+     */
     protected boolean exitsApplication() {
         return false;
     }

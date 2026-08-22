@@ -10,7 +10,12 @@ public class EventCommand extends TaskCommand {
     /** Tokens required after the command name. */
     private static final String[] REQUIRED_TOKENS = {"/from", "/to"};
 
-    /** Creates a command that adds an event task. */
+    /**
+     * Creates a command that adds an event task.
+     *
+     * @param input the complete line entered by the user
+     * @param taskList the task list for the current session
+     */
     public EventCommand(String input, TaskList taskList) { super(input, taskList); }
 
     /** {@inheritDoc} */
@@ -29,7 +34,11 @@ public class EventCommand extends TaskCommand {
                 + " START " + REQUIRED_TOKENS[1] + " END'.";
     }
 
-    /** Splits the description, start time, and end time around the required tokens. */
+    /**
+     * Splits the description, start time, and end time around the required tokens.
+     *
+     * @return the description, start time, and end time; {@code null} when a token is missing
+     */
     private String[] details() {
         String[] descriptionAndTimes = input.substring(COMMAND.length()).trim()
                 .split(" " + REQUIRED_TOKENS[0] + " ", 2);

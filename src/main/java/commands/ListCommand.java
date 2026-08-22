@@ -9,7 +9,12 @@ public class ListCommand extends Command {
     /** Tokens required after the command name. */
     private static final String[] REQUIRED_TOKENS = {};
 
-    /** Creates a command that displays all tasks. */
+    /**
+     * Creates a command that displays all tasks.
+     *
+     * @param input the complete line entered by the user
+     * @param taskList the task list for the current session
+     */
     public ListCommand(String input, TaskList taskList) { super(input, taskList); }
 
     /** {@inheritDoc} */

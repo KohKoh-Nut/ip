@@ -9,7 +9,12 @@ public class UnknownCommand extends Command {
     /** Tokens required after the command name. */
     private static final String[] REQUIRED_TOKENS = {};
 
-    /** Creates a command that displays guidance for unsupported input. */
+    /**
+     * Creates a command that displays guidance for unsupported input.
+     *
+     * @param input the complete line entered by the user
+     * @param taskList the task list for the current session
+     */
     public UnknownCommand(String input, TaskList taskList) { super(input, taskList); }
 
     /** {@inheritDoc} */

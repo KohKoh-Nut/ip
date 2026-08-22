@@ -48,10 +48,18 @@ public abstract class Task {
         return isDone ? "X" : " ";
     }
 
-    /** Returns the single-letter code that identifies this task type. */
+    /**
+     * Returns the single-letter code that identifies this task type.
+     *
+     * @return the task type code
+     */
     protected abstract String getTaskType();
 
-    /** Returns the task-specific information shown after its description. */
+    /**
+     * Returns the task-specific information shown after its description.
+     *
+     * @return the additional display details for this task
+     */
     protected String getAdditionalDetails() {
         return "";
     }

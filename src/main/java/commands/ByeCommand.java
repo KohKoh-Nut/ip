@@ -10,7 +10,12 @@ public class ByeCommand extends Command {
     /** Tokens required after the command name. */
     private static final String[] REQUIRED_TOKENS = {};
 
-    /** Creates a command that ends the current session. */
+    /**
+     * Creates a command that ends the current session.
+     *
+     * @param input the complete line entered by the user
+     * @param taskList the task list for the current session
+     */
     public ByeCommand(String input, TaskList taskList) { super(input, taskList); }
 
     /** {@inheritDoc} */
