@@ -49,7 +49,7 @@ public class Zabud {
                     int taskIndex = taskNumber - 1;
                     session.tasks[taskIndex].markAsDone();
                     System.out.println(" Nice! I've marked this task as done:");
-                    System.out.println("   [X] " + session.tasks[taskIndex].getDescription());
+                    System.out.println("   " + session.tasks[taskIndex]);
                 } catch (NumberFormatException | StringIndexOutOfBoundsException exception) {
                     System.out.println(" Please specify a valid task number.");
                 }
@@ -71,7 +71,7 @@ public class Zabud {
                     int taskIndex = taskNumber - 1;
                     session.tasks[taskIndex].markAsNotDone();
                     System.out.println(" OK, I've marked this task as not done yet:");
-                    System.out.println("   [ ] " + session.tasks[taskIndex].getDescription());
+                    System.out.println("   " + session.tasks[taskIndex]);
                 } catch (NumberFormatException | StringIndexOutOfBoundsException exception) {
                     System.out.println(" Please specify a valid task number.");
                 }
@@ -79,20 +79,67 @@ public class Zabud {
             }
         },
 
-        /** Adds the input as a new task. */
-        ADD {
+        /** Adds a to-do task. */
+        TODO {
             @Override
             boolean execute(Session session, String input) {
-                if (session.taskCount < MAX_TASKS) {
-                    session.tasks[session.taskCount] = new Task(input);
-                    session.taskCount++;
-                    System.out.println(" added: " + input);
-                } else {
-                    System.out.println(" Sorry, your task list is full.");
+                String description = input.substring("todo".length()).trim();
+                addTask(session, description.isEmpty() ? null : new Todo(description));
+                return true;
+            }
+        },
+
+        /** Adds a deadline task. */
+        DEADLINE {
+            @Override
+            boolean execute(Session session, String input) {
+                String[] parts = input.substring("deadline".length()).trim().split(" /by ", 2);
+                Task task = parts.length == 2 && !parts[0].isBlank() && !parts[1].isBlank()
+                        ? new Deadline(parts[0].trim(), parts[1].trim()) : null;
+                addTask(session, task);
+                return true;
+            }
+        },
+
+        /** Adds an event task. */
+        EVENT {
+            @Override
+            boolean execute(Session session, String input) {
+                String[] parts = input.substring("event".length()).trim().split(" /from ", 2);
+                Task task = null;
+                if (parts.length == 2 && !parts[0].isBlank()) {
+                    String[] times = parts[1].split(" /to ", 2);
+                    if (times.length == 2 && !times[0].isBlank() && !times[1].isBlank()) {
+                        task = new Event(parts[0].trim(), times[0].trim(), times[1].trim());
+                    }
                 }
+                addTask(session, task);
+                return true;
+            }
+        },
+
+        /** Ignores an unrecognised command without adding a task. */
+        UNKNOWN {
+            @Override
+            boolean execute(Session session, String input) {
+                System.out.println(" Please use todo, deadline, or event to add a task.");
                 return true;
             }
         };
+
+        /** Adds a parsed task or prints a usage message when parsing failed. */
+        private static void addTask(Session session, Task task) {
+            if (task == null) {
+                System.out.println(" Please provide all required task details.");
+            } else if (session.taskCount < MAX_TASKS) {
+                session.tasks[session.taskCount] = task;
+                session.taskCount++;
+                System.out.println(" Got it. I've added this task:");
+                System.out.println("   " + task);
+            } else {
+                System.out.println(" Sorry, your task list is full.");
+            }
+        }
 
         /**
          * Performs this command's task.
@@ -105,7 +152,7 @@ public class Zabud {
 
         /**
          * Converts user input into a command and dispatches it through a switch.
-         * Any input that is not a built-in command is treated as a task to add.
+         * Only the three supported task commands can add tasks.
          *
          * @param input the complete line entered by the user
          * @param session the current session
@@ -117,7 +164,13 @@ public class Zabud {
                 case "list" -> LIST;
                 case String command when command.startsWith("mark ") -> MARK;
                 case String command when command.startsWith("unmark ") -> UNMARK;
-                default -> ADD;
+                case "todo" -> TODO;
+                case String command when command.startsWith("todo ") -> TODO;
+                case "deadline" -> DEADLINE;
+                case String command when command.startsWith("deadline ") -> DEADLINE;
+                case "event" -> EVENT;
+                case String command when command.startsWith("event ") -> EVENT;
+                default -> UNKNOWN;
             };
             return selectedCommand.execute(session, input);
         }
@@ -179,8 +232,7 @@ public class Zabud {
         System.out.println(" Here are the tasks in your list:");
         for (int i = 0; i < session.taskCount; i++) {
             Task task = session.tasks[i];
-            System.out.println(" " + (i + 1) + ".[" + task.getStatusIcon() + "] "
-                    + task.getDescription());
+            System.out.println(" " + (i + 1) + "." + task);
         }
     }
 
