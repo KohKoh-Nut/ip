@@ -30,7 +30,16 @@ public class Zabud {
         LIST {
             @Override
             boolean execute(Session session, String input) {
-                printTasks(session.tasks, session.taskCount);
+                printTasks(session);
+                return true;
+            }
+        },
+
+        /** Marks the task selected by the user as done. */
+        MARK {
+            @Override
+            boolean execute(Session session, String input) {
+                markTask(session, input);
                 return true;
             }
         },
@@ -68,12 +77,13 @@ public class Zabud {
          * @return {@code true} when the application should continue running
          */
         static boolean executeCommand(String input, Session session) {
-            Command command = switch (input) {
+            Command selectedCommand = switch (input) {
                 case "bye" -> BYE;
                 case "list" -> LIST;
+                case String command when command.startsWith("mark ") -> MARK;
                 default -> ADD;
             };
-            return command.execute(session, input);
+            return selectedCommand.execute(session, input);
         }
     }
 
@@ -81,6 +91,9 @@ public class Zabud {
     private static final class Session {
         /** Tasks in the order in which they were entered. */
         private final String[] tasks = new String[MAX_TASKS];
+
+        /** Completion state corresponding to each task in {@link #tasks}. */
+        private final boolean[] completed = new boolean[MAX_TASKS];
 
         /** Number of occupied elements in {@link #tasks}. */
         private int taskCount;
@@ -125,14 +138,39 @@ public class Zabud {
     }
 
     /**
-     * Prints all tasks in the order in which they were entered.
+     * Prints all tasks and their completion status.
      *
-     * @param tasks the task storage to read
-     * @param taskCount the number of tasks currently stored
+     * @param session the current session containing tasks and completion states
      */
-    private static void printTasks(String[] tasks, int taskCount) {
-        for (int i = 0; i < taskCount; i++) {
-            System.out.println(" " + (i + 1) + ". " + tasks[i]);
+    private static void printTasks(Session session) {
+        System.out.println(" Here are the tasks in your list:");
+        for (int i = 0; i < session.taskCount; i++) {
+            String marker = session.completed[i] ? "X" : " ";
+            System.out.println(" " + (i + 1) + ".[" + marker + "] " + session.tasks[i]);
         }
     }
+
+    /**
+     * Marks a task as done based on the one-based number in a {@code mark} command.
+     *
+     * @param session the current session to update
+     * @param input the complete mark command, such as {@code mark 2}
+     */
+    private static void markTask(Session session, String input) {
+        try {
+            int taskNumber = Integer.parseInt(input.substring("mark ".length()).trim());
+            if (taskNumber < 1 || taskNumber > session.taskCount) {
+                System.out.println(" Task number is out of range.");
+                return;
+            }
+
+            int taskIndex = taskNumber - 1;
+            session.completed[taskIndex] = true;
+            System.out.println(" Nice! I've marked this task as done:");
+            System.out.println("   [X] " + session.tasks[taskIndex]);
+        } catch (NumberFormatException | StringIndexOutOfBoundsException exception) {
+            System.out.println(" Please specify a valid task number.");
+        }
+    }
+
 }
