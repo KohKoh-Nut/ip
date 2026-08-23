@@ -10,20 +10,19 @@ import session.Session;
 public class UnknownCommand extends Command {
     /** The input marker for an otherwise unsupported command. */
     public static final String COMMAND = "";
-    /**
-     * Creates a command that displays guidance for unsupported input.
-     *
-     * @param tokens structured values supplied after the unrecognized command name
-     * @param session the current session
-     */
-    public UnknownCommand(List<ParsedToken> tokens, Session session) { super(tokens, session); }
+    /** Creates a command that displays guidance for unsupported input. */
+    private UnknownCommand(Session session) { super(session); }
+
+    /** Builds the fallback command for an unsupported command name. */
+    public static Command build(List<ParsedToken> tokens, Session session) {
+        return new UnknownCommand(session);
+    }
+
+    /** Returns guidance for unsupported input. */
+    public static String hint() { return " Unknown command. Use 'help' to see available commands."; }
 
     /** {@inheritDoc} */
     @Override public void execute() {
-        // This command never executes because its input is always invalid.
+        System.out.println(hint());
     }
-    /** {@inheritDoc} */
-    @Override public boolean check() { return false; }
-    /** {@inheritDoc} */
-    @Override public String hint() { return " Unknown command. Use 'help' to see available commands."; }
 }

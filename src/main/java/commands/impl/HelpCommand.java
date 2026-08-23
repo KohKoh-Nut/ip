@@ -14,15 +14,21 @@ public class HelpCommand extends Command {
     /** The user input that invokes this command. */
     public static final String COMMAND = "help";
 
-    /**
-     * Creates a command that displays available command syntax.
-     *
-     * @param tokens structured values supplied after the command name
-     * @param session the current session
-     */
-    public HelpCommand(List<ParsedToken> tokens, Session session) {
-        super(tokens, session);
+    /** Creates a command that displays available command syntax. */
+    private HelpCommand(Session session) { super(session); }
+
+    /** Builds a help command from validated input. */
+    public static Command build(List<ParsedToken> tokens, Session session) {
+        return new HelpCommand(session);
     }
+
+    /** Checks that no value follows the command name. */
+    public static boolean check(List<ParsedToken> tokens, Session session) {
+        return hasTokenNames(tokens, Parser.DEFAULT_TOKEN) && tokens.getFirst().value().isBlank();
+    }
+
+    /** Returns guidance for invalid help input. */
+    public static String hint() { return " Use 'help'."; }
 
     /** {@inheritDoc} */
     @Override
@@ -47,15 +53,4 @@ public class HelpCommand extends Command {
         System.out.println(Token.composeRequirements(List.of(by, from, to)));
     }
 
-    /** {@inheritDoc} */
-    @Override
-    public boolean check() {
-        return hasTokenNames(tokens, Parser.DEFAULT_TOKEN) && tokens.getFirst().value().isBlank();
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public String hint() {
-        return "";
-    }
 }

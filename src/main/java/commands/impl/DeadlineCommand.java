@@ -2,6 +2,7 @@ package commands.impl;
 
 import java.util.List;
 
+import commands.Command;
 import commands.ParsedToken;
 import commands.Parser;
 import commands.TaskCommand;
@@ -24,14 +25,14 @@ public class DeadlineCommand extends TaskCommand {
     /**
      * Creates a command that adds a deadline task.
      *
-     * @param tokens structured values supplied after the command name
+     * @param description validated task description
+     * @param by validated deadline value
      * @param session the current session
      */
-    private DeadlineCommand(List<ParsedToken> tokens, Session session) {
-        super(tokens, session);
-        description = tokens.isEmpty() ? "" : tokens.getFirst().value();
-        String value = tokens.size() < 2 ? "" : tokens.get(1).value();
-        by = new DateTimeToken(BY_TOKEN, value);
+    private DeadlineCommand(String description, DateTimeToken by, Session session) {
+        super(session);
+        this.description = description;
+        this.by = by;
     }
 
     /**
@@ -41,23 +42,27 @@ public class DeadlineCommand extends TaskCommand {
      * @param session current application session
      * @return deadline command containing the parsed values
      */
-    public static DeadlineCommand build(List<ParsedToken> tokens, Session session) {
-        return new DeadlineCommand(tokens, session);
+    public static Command build(List<ParsedToken> tokens, Session session) {
+        return new DeadlineCommand(tokens.getFirst().value(),
+                new DateTimeToken(BY_TOKEN, tokens.get(1).value()), session);
+    }
+
+    /** Checks the description, token names, and typed deadline value. */
+    public static boolean check(List<ParsedToken> tokens, Session session) {
+        return hasTokenNames(tokens, Parser.DEFAULT_TOKEN, BY_TOKEN)
+                && !tokens.getFirst().value().isBlank()
+                && new DateTimeToken(BY_TOKEN, tokens.get(1).value()).check();
+    }
+
+    /** Returns guidance for invalid deadline input. */
+    public static String hint() {
+        List<DateTimeToken> hintTokens = List.of(new DateTimeToken(BY_TOKEN, ""));
+        return formatHint(COMMAND + " " + DESCRIPTION + " " + Token.composeHints(hintTokens),
+                DESCRIPTION_REQUIREMENT, Token.composeRequirements(hintTokens));
     }
 
     /** {@inheritDoc} */
     @Override public void execute() {
         addTask(new Deadline(description, by.date(), by.time()));
-    }
-    /** {@inheritDoc} */
-    @Override public boolean check() {
-        return hasTokenNames(tokens, Parser.DEFAULT_TOKEN, BY_TOKEN)
-                && !description.isBlank() && by.check();
-    }
-    /** {@inheritDoc} */
-    @Override public String hint() {
-        List<DateTimeToken> hintTokens = List.of(new DateTimeToken(BY_TOKEN, ""));
-        return formatHint(COMMAND + " " + DESCRIPTION + " " + Token.composeHints(hintTokens),
-                DESCRIPTION_REQUIREMENT, Token.composeRequirements(hintTokens));
     }
 }

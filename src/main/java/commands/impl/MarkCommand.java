@@ -4,7 +4,6 @@ import java.util.List;
 
 import commands.Command;
 import commands.ParsedToken;
-import commands.Parser;
 import session.Session;
 import tasks.Task;
 
@@ -18,12 +17,12 @@ public class MarkCommand extends Command {
     /**
      * Creates a command that marks a task as done.
      *
-     * @param tokens structured values supplied after the command name
+     * @param taskNumber validated one-based task number
      * @param session the current session
      */
-    private MarkCommand(List<ParsedToken> tokens, Session session) {
-        super(tokens, session);
-        taskNumber = parseTaskNumber(tokens);
+    private MarkCommand(int taskNumber, Session session) {
+        super(session);
+        this.taskNumber = taskNumber;
     }
 
     /**
@@ -33,8 +32,18 @@ public class MarkCommand extends Command {
      * @param session current application session
      * @return mark command containing the parsed task number
      */
-    public static MarkCommand build(List<ParsedToken> tokens, Session session) {
-        return new MarkCommand(tokens, session);
+    public static Command build(List<ParsedToken> tokens, Session session) {
+        return new MarkCommand(taskNumber(tokens), session);
+    }
+
+    /** Checks that the default value identifies an existing task. */
+    public static boolean check(List<ParsedToken> tokens, Session session) {
+        return hasExistingTaskNumber(tokens, session);
+    }
+
+    /** Returns guidance for invalid mark input. */
+    public static String hint() {
+        return formatHint(COMMAND + " " + TASK_NUMBER, TASK_NUMBER_REQUIREMENT);
     }
 
     /** {@inheritDoc} */
@@ -44,28 +53,5 @@ public class MarkCommand extends Command {
         session.save();
         System.out.println(" Nice! I've marked this task as done:");
         System.out.println("   " + task);
-    }
-    /** {@inheritDoc} */
-    @Override public boolean check() {
-        return hasTokenNames(tokens, Parser.DEFAULT_TOKEN)
-                && taskNumber > 0 && session.getTaskList().get(taskNumber) != null;
-    }
-    /** {@inheritDoc} */
-    @Override public String hint() {
-        return formatHint(COMMAND + " " + TASK_NUMBER, TASK_NUMBER_REQUIREMENT);
-    }
-
-    /**
-     * Parses a one-based task number from the default value.
-     *
-     * @param tokens parser-produced values
-     * @return the task number, or {@code -1} if the input is not a number
-     */
-    private static int parseTaskNumber(List<ParsedToken> tokens) {
-        try {
-            return tokens.isEmpty() ? -1 : Integer.parseInt(tokens.getFirst().value());
-        } catch (NumberFormatException exception) {
-            return -1;
-        }
     }
 }

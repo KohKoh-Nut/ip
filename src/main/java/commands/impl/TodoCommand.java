@@ -2,6 +2,7 @@ package commands.impl;
 
 import java.util.List;
 
+import commands.Command;
 import commands.ParsedToken;
 import commands.Parser;
 import commands.TaskCommand;
@@ -18,12 +19,12 @@ public class TodoCommand extends TaskCommand {
     /**
      * Creates a command that adds a to-do task.
      *
-     * @param tokens structured values supplied after the command name
+     * @param description validated task description
      * @param session the current session
      */
-    private TodoCommand(List<ParsedToken> tokens, Session session) {
-        super(tokens, session);
-        description = tokens.isEmpty() ? "" : tokens.getFirst().value();
+    private TodoCommand(String description, Session session) {
+        super(session);
+        this.description = description;
     }
 
     /**
@@ -33,18 +34,20 @@ public class TodoCommand extends TaskCommand {
      * @param session current application session
      * @return to-do command containing the parsed description
      */
-    public static TodoCommand build(List<ParsedToken> tokens, Session session) {
-        return new TodoCommand(tokens, session);
+    public static Command build(List<ParsedToken> tokens, Session session) {
+        return new TodoCommand(tokens.getFirst().value(), session);
+    }
+
+    /** Checks that the input contains only a nonblank default description. */
+    public static boolean check(List<ParsedToken> tokens, Session session) {
+        return hasTokenNames(tokens, Parser.DEFAULT_TOKEN) && !tokens.getFirst().value().isBlank();
+    }
+
+    /** Returns guidance for invalid to-do input. */
+    public static String hint() {
+        return formatHint(COMMAND + " " + DESCRIPTION, DESCRIPTION_REQUIREMENT);
     }
 
     /** {@inheritDoc} */
     @Override public void execute() { addTask(new Todo(description)); }
-    /** {@inheritDoc} */
-    @Override public boolean check() {
-        return hasTokenNames(tokens, Parser.DEFAULT_TOKEN) && !description.isBlank();
-    }
-    /** {@inheritDoc} */
-    @Override public String hint() {
-        return formatHint(COMMAND + " " + DESCRIPTION, DESCRIPTION_REQUIREMENT);
-    }
 }

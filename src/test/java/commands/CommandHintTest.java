@@ -4,9 +4,9 @@ import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
+import java.util.List;
 
 import commands.impl.HelpCommand;
-import commands.impl.UnknownCommand;
 import session.Session;
 
 /** Regression checks for command usage hints and the help requirements footer. */
@@ -17,18 +17,19 @@ public final class CommandHintTest {
     /** Verifies description, task-number, unknown-command, and help guidance. */
     public static void main(String[] args) throws Exception {
         Session session = new Session(Files.createTempDirectory("zabud-hint").resolve("session.txt"));
-        assert Parser.build("todo", session).hint().contains("todo DESCRIPTION");
-        assert Parser.build("todo", session).hint().contains("- DESCRIPTION:");
-        assert Parser.build("delete", session).hint().contains("delete TASK_NUMBER");
-        assert Parser.build("delete", session).hint().contains("- TASK_NUMBER:");
-        assert Parser.build("unknown", session) instanceof UnknownCommand;
-        assert Parser.build("unknown", session).hint().contains("Use 'help'");
+        assert Parser.hint(Parser.parse("todo")).contains("todo DESCRIPTION");
+        assert Parser.hint(Parser.parse("todo")).contains("- DESCRIPTION:");
+        assert Parser.hint(Parser.parse("delete")).contains("delete TASK_NUMBER");
+        assert Parser.hint(Parser.parse("delete")).contains("- TASK_NUMBER:");
+        assert Parser.hint(Parser.parse("unknown")).contains("Use 'help'");
 
         ByteArrayOutputStream output = new ByteArrayOutputStream();
         PrintStream original = System.out;
         try {
             System.setOut(new PrintStream(output, true, StandardCharsets.UTF_8));
-            ((HelpCommand) Parser.build("help", session)).execute();
+            List<ParsedToken> helpInput = Parser.parse("help");
+            assert Parser.check(helpInput, session);
+            ((HelpCommand) Parser.build(helpInput, session)).execute();
         } finally {
             System.setOut(original);
         }

@@ -2,6 +2,7 @@ package commands.impl;
 
 import java.util.List;
 
+import commands.Command;
 import commands.ParsedToken;
 import commands.Parser;
 import commands.TaskCommand;
@@ -28,16 +29,16 @@ public class EventCommand extends TaskCommand {
     /**
      * Creates a command that adds an event task.
      *
-     * @param tokens structured values supplied after the command name
+     * @param description validated task description
+     * @param from validated event start
+     * @param to validated event end
      * @param session the current session
      */
-    private EventCommand(List<ParsedToken> tokens, Session session) {
-        super(tokens, session);
-        description = tokens.isEmpty() ? "" : tokens.getFirst().value();
-        String fromValue = tokens.size() < 2 ? "" : tokens.get(1).value();
-        String toValue = tokens.size() < 3 ? "" : tokens.get(2).value();
-        from = new DateTimeToken(FROM_TOKEN, fromValue);
-        to = new DateTimeToken(TO_TOKEN, toValue);
+    private EventCommand(String description, DateTimeToken from, DateTimeToken to, Session session) {
+        super(session);
+        this.description = description;
+        this.from = from;
+        this.to = to;
     }
 
     /**
@@ -47,24 +48,31 @@ public class EventCommand extends TaskCommand {
      * @param session current application session
      * @return event command containing the parsed values
      */
-    public static EventCommand build(List<ParsedToken> tokens, Session session) {
-        return new EventCommand(tokens, session);
+    public static Command build(List<ParsedToken> tokens, Session session) {
+        return new EventCommand(tokens.getFirst().value(),
+                new DateTimeToken(FROM_TOKEN, tokens.get(1).value()),
+                new DateTimeToken(TO_TOKEN, tokens.get(2).value()), session);
+    }
+
+    /** Checks the description, token names, and typed event boundaries. */
+    public static boolean check(List<ParsedToken> tokens, Session session) {
+        if (!hasTokenNames(tokens, Parser.DEFAULT_TOKEN, FROM_TOKEN, TO_TOKEN)
+                || tokens.getFirst().value().isBlank()) return false;
+        DateTimeToken from = new DateTimeToken(FROM_TOKEN, tokens.get(1).value());
+        DateTimeToken to = new DateTimeToken(TO_TOKEN, tokens.get(2).value());
+        return from.check() && to.check();
+    }
+
+    /** Returns guidance for invalid event input. */
+    public static String hint() {
+        List<DateTimeToken> hintTokens = List.of(
+                new DateTimeToken(FROM_TOKEN, ""), new DateTimeToken(TO_TOKEN, ""));
+        return formatHint(COMMAND + " " + DESCRIPTION + " " + Token.composeHints(hintTokens),
+                DESCRIPTION_REQUIREMENT, Token.composeRequirements(hintTokens));
     }
 
     /** {@inheritDoc} */
     @Override public void execute() {
         addTask(new Event(description, from.date(), from.time(), to.date(), to.time()));
-    }
-    /** {@inheritDoc} */
-    @Override public boolean check() {
-        return hasTokenNames(tokens, Parser.DEFAULT_TOKEN, FROM_TOKEN, TO_TOKEN)
-                && !description.isBlank() && from.check() && to.check();
-    }
-    /** {@inheritDoc} */
-    @Override public String hint() {
-        List<DateTimeToken> hintTokens = List.of(
-                new DateTimeToken(FROM_TOKEN, ""), new DateTimeToken(TO_TOKEN, ""));
-        return formatHint(COMMAND + " " + DESCRIPTION + " " + Token.composeHints(hintTokens),
-                DESCRIPTION_REQUIREMENT, Token.composeRequirements(hintTokens));
     }
 }

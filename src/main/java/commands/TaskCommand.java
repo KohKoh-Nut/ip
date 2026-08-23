@@ -1,7 +1,5 @@
 package commands;
 
-import java.util.List;
-
 import session.Session;
 import tasks.Task;
 
@@ -10,11 +8,10 @@ public abstract class TaskCommand extends Command {
     /**
      * Creates a command that adds a task.
      *
-     * @param tokens structured values supplied after the command name
      * @param session the current session
      */
-    protected TaskCommand(List<ParsedToken> tokens, Session session) {
-        super(tokens, session);
+    protected TaskCommand(Session session) {
+        super(session);
     }
 
     /**

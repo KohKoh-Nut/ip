@@ -12,13 +12,21 @@ public class ByeCommand extends Command {
     /** The user input that invokes this command. */
     public static final String COMMAND = "bye";
 
-    /**
-     * Creates a command that ends the current session.
-     *
-     * @param tokens structured values supplied after the command name
-     * @param session the current session
-     */
-    public ByeCommand(List<ParsedToken> tokens, Session session) { super(tokens, session); }
+    /** Creates a command that ends the current session. */
+    private ByeCommand(Session session) { super(session); }
+
+    /** Builds a bye command from validated input. */
+    public static Command build(List<ParsedToken> tokens, Session session) {
+        return new ByeCommand(session);
+    }
+
+    /** Checks that no value follows the command name. */
+    public static boolean check(List<ParsedToken> tokens, Session session) {
+        return hasTokenNames(tokens, Parser.DEFAULT_TOKEN) && tokens.getFirst().value().isBlank();
+    }
+
+    /** Returns guidance for invalid bye input. */
+    public static String hint() { return " Use 'bye'."; }
 
     /** {@inheritDoc} */
     @Override public void execute() {
@@ -26,11 +34,5 @@ public class ByeCommand extends Command {
         System.out.println("____________________________________________________________");
     }
     /** {@inheritDoc} */
-    @Override public boolean check() {
-        return hasTokenNames(tokens, Parser.DEFAULT_TOKEN) && tokens.getFirst().value().isBlank();
-    }
-    /** {@inheritDoc} */
-    @Override public String hint() { return ""; }
-    /** {@inheritDoc} */
-    @Override protected boolean exitsApplication() { return true; }
+    @Override public boolean exitsApplication() { return true; }
 }

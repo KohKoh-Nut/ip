@@ -4,8 +4,8 @@ import java.util.List;
 
 import session.Session;
 
-/** Defines a command that can validate and act on one line of user input. */
-public abstract class Command implements Validatable {
+/** Defines an executable action built from validated command input. */
+public abstract class Command {
     /** Placeholder used for a required task description. */
     protected static final String DESCRIPTION = "DESCRIPTION";
     /** Placeholder used for a required one-based task number. */
@@ -18,17 +18,13 @@ public abstract class Command implements Validatable {
             " - TASK_NUMBER: enter the number of an existing task.";
     /** The session this command may read or update. */
     protected final Session session;
-    /** Structured values supplied after the command name. */
-    protected final List<ParsedToken> tokens;
 
     /**
-     * Creates a command with the parsed values and session it will operate on.
+     * Creates a command with the session it will operate on.
      *
-     * @param tokens structured values supplied after the command name
      * @param session the current session
      */
-    protected Command(List<ParsedToken> tokens, Session session) {
-        this.tokens = List.copyOf(tokens);
+    protected Command(Session session) {
         this.session = session;
     }
 
@@ -58,47 +54,42 @@ public abstract class Command implements Validatable {
         return true;
     }
 
+    /**
+     * Parses the default value as a one-based task number.
+     *
+     * @param tokens parsed values supplied after the command name
+     * @return parsed task number, or {@code -1} when it is not an integer
+     */
+    protected static int taskNumber(List<ParsedToken> tokens) {
+        try {
+            return tokens.isEmpty() ? -1 : Integer.parseInt(tokens.getFirst().value());
+        } catch (NumberFormatException exception) {
+            return -1;
+        }
+    }
+
+    /**
+     * Checks input containing one existing task number.
+     *
+     * @param tokens parsed values supplied after the command name
+     * @param session current application session
+     * @return whether the input identifies an existing task
+     */
+    protected static boolean hasExistingTaskNumber(List<ParsedToken> tokens, Session session) {
+        int taskNumber = taskNumber(tokens);
+        return hasTokenNames(tokens, Parser.DEFAULT_TOKEN)
+                && taskNumber > 0 && session.getTaskList().get(taskNumber) != null;
+    }
+
     /** Executes this command's effect. */
     public abstract void execute();
-
-    /**
-     * Checks whether this command has valid input.
-     *
-     * @return whether the command can be executed
-     */
-    public abstract boolean check();
-
-    /**
-     * Returns guidance shown when {@link #check()} fails.
-     *
-     * @return a hint explaining how to correct the input
-     */
-    public abstract String hint();
 
     /**
      * Returns whether this command ends the application session.
      *
      * @return whether Zabud should stop processing input after this command
      */
-    protected boolean exitsApplication() {
+    public boolean exitsApplication() {
         return false;
     }
-
-    /**
-     * Creates, validates, and invokes the command matching the given input.
-     *
-     * @param input the complete line entered by the user
-     * @param session the current session
-     * @return whether the application should continue running
-     */
-    public static boolean invoke(String input, Session session) {
-        Command command = Parser.build(input, session);
-        if (command.check()) {
-            command.execute();
-        } else {
-            System.out.println(command.hint());
-        }
-        return !command.exitsApplication();
-    }
-
 }

@@ -2,6 +2,8 @@ package commands;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.BiPredicate;
+import java.util.function.Supplier;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -58,29 +60,77 @@ public final class Parser {
     }
 
     /**
-     * Builds the command selected by the first parsed value.
-     * The command name is removed before the remaining values are passed to
-     * the selected command class.
+     * Checks the parsed values using the selected command's validator.
+     *
+     * @param parsed complete parser result, including the command entry
+     * @param session current application session
+     * @return whether the command can be built safely
+     */
+    public static boolean check(List<ParsedToken> parsed, Session session) {
+        if (parsed.isEmpty() || !parsed.getFirst().name().equals(COMMAND_TOKEN)) return false;
+        Definition definition = definition(parsed.getFirst().value());
+        return definition.validator().test(arguments(parsed), session);
+    }
+
+    /**
+     * Builds the command selected by a validated parser result.
+     *
+     * @param parsed validated parser result, including the command entry
+     * @param session current application session
+     * @return executable command selected by the command name
+     */
+    public static Command build(List<ParsedToken> parsed, Session session) {
+        Definition definition = definition(parsed.getFirst().value());
+        return definition.builder().build(arguments(parsed), session);
+    }
+
+    /**
+     * Parses, validates, builds, and executes one line of input.
      *
      * @param input complete command line entered by the user
      * @param session current application session
-     * @return command corresponding to the command name, or an unknown command
+     * @return whether the application should continue running
      */
-    public static Command build(String input, Session session) {
+    public static boolean invoke(String input, Session session) {
         List<ParsedToken> parsed = parse(input);
-        String command = parsed.getFirst().value();
-        List<ParsedToken> tokens = parsed.subList(1, parsed.size());
+        if (!check(parsed, session)) {
+            System.out.println(hint(parsed));
+            return true;
+        }
+        Command command = build(parsed, session);
+        command.execute();
+        return !command.exitsApplication();
+    }
+
+    /** Returns the values following the command entry. */
+    private static List<ParsedToken> arguments(List<ParsedToken> parsed) {
+        return parsed.subList(1, parsed.size());
+    }
+
+    /** Returns validation guidance for a parser result. */
+    public static String hint(List<ParsedToken> parsed) {
+        if (parsed.isEmpty() || !parsed.getFirst().name().equals(COMMAND_TOKEN)) {
+            return UnknownCommand.hint();
+        }
+        return definition(parsed.getFirst().value()).hint().get();
+    }
+
+    /** Selects the builder, validator, and hint belonging to a command name. */
+    private static Definition definition(String command) {
         return switch (command) {
-        case ByeCommand.COMMAND -> new ByeCommand(tokens, session);
-        case ListCommand.COMMAND -> new ListCommand(tokens, session);
-        case HelpCommand.COMMAND -> new HelpCommand(tokens, session);
-        case MarkCommand.COMMAND -> MarkCommand.build(tokens, session);
-        case UnmarkCommand.COMMAND -> UnmarkCommand.build(tokens, session);
-        case DeleteCommand.COMMAND -> DeleteCommand.build(tokens, session);
-        case TodoCommand.COMMAND -> TodoCommand.build(tokens, session);
-        case DeadlineCommand.COMMAND -> DeadlineCommand.build(tokens, session);
-        case EventCommand.COMMAND -> EventCommand.build(tokens, session);
-        default -> new UnknownCommand(tokens, session);
+        case ByeCommand.COMMAND -> new Definition(ByeCommand::build, ByeCommand::check, ByeCommand::hint);
+        case ListCommand.COMMAND -> new Definition(ListCommand::build, ListCommand::check, ListCommand::hint);
+        case HelpCommand.COMMAND -> new Definition(HelpCommand::build, HelpCommand::check, HelpCommand::hint);
+        case MarkCommand.COMMAND -> new Definition(MarkCommand::build, MarkCommand::check, MarkCommand::hint);
+        case UnmarkCommand.COMMAND -> new Definition(UnmarkCommand::build, UnmarkCommand::check,
+                UnmarkCommand::hint);
+        case DeleteCommand.COMMAND -> new Definition(DeleteCommand::build, DeleteCommand::check,
+                DeleteCommand::hint);
+        case TodoCommand.COMMAND -> new Definition(TodoCommand::build, TodoCommand::check, TodoCommand::hint);
+        case DeadlineCommand.COMMAND -> new Definition(DeadlineCommand::build, DeadlineCommand::check,
+                DeadlineCommand::hint);
+        case EventCommand.COMMAND -> new Definition(EventCommand::build, EventCommand::check, EventCommand::hint);
+        default -> new Definition(UnknownCommand::build, (tokens, session) -> true, UnknownCommand::hint);
         };
     }
 
@@ -90,5 +140,10 @@ public final class Parser {
             if (Character.isWhitespace(input.charAt(index))) return index;
         }
         return -1;
+    }
+
+    /** Associates one command name with its construction and validation behavior. */
+    private record Definition(CommandBuilder builder,
+            BiPredicate<List<ParsedToken>, Session> validator, Supplier<String> hint) {
     }
 }

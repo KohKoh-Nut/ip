@@ -32,7 +32,11 @@ public final class ParserTest {
         assert Parser.parse("deadline test /by").getLast().equals(new ParsedToken("by", ""));
 
         Session session = new Session(Files.createTempDirectory("zabud-parser").resolve("session.txt"));
-        assert Parser.build("deadline test /by 1200", session) instanceof DeadlineCommand;
-        assert Parser.build("unsupported value", session) instanceof UnknownCommand;
+        List<ParsedToken> deadline = Parser.parse("deadline test /by 1200");
+        assert Parser.check(deadline, session);
+        assert Parser.build(deadline, session) instanceof DeadlineCommand;
+        List<ParsedToken> unknown = Parser.parse("unsupported value");
+        assert Parser.check(unknown, session);
+        assert Parser.build(unknown, session) instanceof UnknownCommand;
     }
 }
