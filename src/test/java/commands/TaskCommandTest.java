@@ -16,6 +16,7 @@ public final class TaskCommandTest {
         Path path = Files.createTempDirectory("zabud-command-test").resolve("tasks.txt");
         Session session = new Session(path);
         DeadlineCommand command = new DeadlineCommand("deadline return book /by 2/12/2019 1800", session);
+        assert command.hint().equals(" Use 'deadline DESCRIPTION /by xxxxxx'.");
         assert command.check();
         command.execute();
         assert session.getTaskList().get(1) instanceof Deadline;

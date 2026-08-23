@@ -45,5 +45,5 @@ public final class DateTimeToken extends Token {
     /** @return whether the value is a valid date, time, or date-time */
     @Override public boolean check() { parse(); return !value.isBlank() && (date != null || time != null); }
     /** @return syntax guidance for this token */
-    @Override public String hint() { return " Use '" + name + " DD/MM/YYYY [HHMM]'."; }
+    @Override public String hint() { return name + " xxxxxx"; }
 }

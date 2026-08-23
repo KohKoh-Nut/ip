@@ -38,7 +38,8 @@ public class EventCommand extends TaskCommand {
     }
     /** {@inheritDoc} */
     @Override public String hint() {
-        return token("/from", "START").hint() + token("/to", "END").hint();
+        return " Use '" + COMMAND + " DESCRIPTION " + token("/from", "").hint()
+                + " " + token("/to", "").hint() + "'.";
     }
 
     /**

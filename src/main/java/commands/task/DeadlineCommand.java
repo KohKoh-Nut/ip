@@ -33,7 +33,7 @@ public class DeadlineCommand extends TaskCommand {
     }
     /** {@inheritDoc} */
     @Override public String hint() {
-        return token("").hint();
+        return " Use '" + COMMAND + " DESCRIPTION " + token("").hint() + "'.";
     }
 
     /**
