@@ -1,4 +1,6 @@
-package commands.task;
+package commands.impl;
+
+import commands.*;
 
 import commands.TaskCommand;
 import commands.tokens.DateTimeToken;
@@ -33,7 +35,7 @@ public class DeadlineCommand extends TaskCommand {
     }
     /** {@inheritDoc} */
     @Override public String hint() {
-        return " Use '" + COMMAND + " DESCRIPTION " + token("").hint() + "'.";
+        return " Use '" + COMMAND + " DESCRIPTION " + REQUIRED_TOKENS[0] + " " + token("").hint() + "'.";
     }
 
     /**

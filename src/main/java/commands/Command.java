@@ -1,9 +1,7 @@
 package commands;
 
 import session.Session;
-import commands.task.DeadlineCommand;
-import commands.task.EventCommand;
-import commands.task.TodoCommand;
+import commands.impl.*;
 
 /** Defines a command that can validate and act on one line of user input. */
 public abstract class Command implements HintCheck {

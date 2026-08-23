@@ -1,4 +1,6 @@
-package commands;
+package commands.impl;
+
+import commands.*;
 
 import session.Session;
 

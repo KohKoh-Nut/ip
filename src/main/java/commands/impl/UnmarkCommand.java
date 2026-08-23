@@ -1,46 +1,40 @@
-package commands;
+package commands.impl;
+
+import commands.*;
 
 import session.Session;
 import tasks.Task;
 
-/** Removes a task from the current session. */
-public class DeleteCommand extends Command {
+/** Marks a task as not done. */
+public class UnmarkCommand extends Command {
     /** The user input that invokes this command. */
-    public static final String COMMAND = "delete";
-
+    public static final String COMMAND = "unmark";
     /** Tokens required after the command name. */
     private static final String[] REQUIRED_TOKENS = {};
 
     /**
-     * Creates a command that removes a task.
+     * Creates a command that marks a task as not done.
      *
      * @param input the complete line entered by the user
      * @param session the current session
      */
-    public DeleteCommand(String input, Session session) {
-        super(input, session);
-    }
+    public UnmarkCommand(String input, Session session) { super(input, session); }
 
     /** {@inheritDoc} */
-    @Override
-    public void execute() {
-        Task task = session.getTaskList().remove(taskNumber());
-        System.out.println(" Noted. I've removed this task:");
+    @Override public void execute() {
+        Task task = session.getTaskList().get(taskNumber());
+        task.markAsNotDone();
+        session.save();
+        System.out.println(" OK, I've marked this task as not done yet:");
         System.out.println("   " + task);
     }
-
     /** {@inheritDoc} */
-    @Override
-    public boolean check() {
+    @Override public boolean check() {
         return taskNumber() > 0 && session.getTaskList().get(taskNumber()) != null
                 && REQUIRED_TOKENS.length == 0;
     }
-
     /** {@inheritDoc} */
-    @Override
-    public String hint() {
-        return " Please specify a valid task number.";
-    }
+    @Override public String hint() { return " Please specify a valid task number."; }
 
     /**
      * Parses the one-based task number following the command name.

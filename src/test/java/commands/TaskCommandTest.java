@@ -1,6 +1,6 @@
 package commands;
 
-import commands.task.DeadlineCommand;
+import commands.impl.DeadlineCommand;
 import java.nio.file.Files;
 import java.time.LocalDateTime;
 import java.nio.file.Path;

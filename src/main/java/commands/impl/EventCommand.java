@@ -1,4 +1,6 @@
-package commands.task;
+package commands.impl;
+
+import commands.*;
 
 import commands.TaskCommand;
 import commands.tokens.DateTimeToken;
@@ -38,8 +40,9 @@ public class EventCommand extends TaskCommand {
     }
     /** {@inheritDoc} */
     @Override public String hint() {
-        return " Use '" + COMMAND + " DESCRIPTION " + token("/from", "").hint()
-                + " " + token("/to", "").hint() + "'.";
+        return " Use '" + COMMAND + " DESCRIPTION " + REQUIRED_TOKENS[0] + " "
+                + token("/from", "").hint() + " " + REQUIRED_TOKENS[1] + " "
+                + token("/to", "").hint() + "'.";
     }
 
     /**
