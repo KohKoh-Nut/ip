@@ -10,7 +10,7 @@ import session.Session;
 import tasks.Todo;
 
 /** Adds a to-do task. */
-public class TodoCommand extends TaskCommand {
+public final class TodoCommand extends TaskCommand {
     /** The user input that invokes this command. */
     public static final String COMMAND = "todo";
     /** Parsed task description. */
@@ -38,12 +38,22 @@ public class TodoCommand extends TaskCommand {
         return new TodoCommand(tokens.getFirst().value(), session);
     }
 
-    /** Checks that the input contains only a nonblank default description. */
+    /**
+     * Checks that the input contains only a nonblank default description.
+     *
+     * @param tokens parsed values supplied after the command name
+     * @param session current application session
+     * @return whether the to-do input is valid
+     */
     public static boolean check(List<ParsedToken> tokens, Session session) {
         return hasTokenNames(tokens, Parser.DEFAULT_TOKEN) && !tokens.getFirst().value().isBlank();
     }
 
-    /** Returns guidance for invalid to-do input. */
+    /**
+     * Returns guidance for invalid to-do input.
+     *
+     * @return valid to-do syntax and requirements
+     */
     public static String hint() {
         return formatHint(COMMAND + " " + DESCRIPTION, DESCRIPTION_REQUIREMENT);
     }

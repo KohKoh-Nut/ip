@@ -89,7 +89,7 @@ public abstract class Command {
      *
      * @return whether Zabud should stop processing input after this command
      */
-    public boolean exitsApplication() {
+    protected boolean exitsApplication() {
         return false;
     }
 }

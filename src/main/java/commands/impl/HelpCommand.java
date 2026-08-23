@@ -10,24 +10,40 @@ import commands.tokens.DateTimeToken;
 import session.Session;
 
 /** Displays the commands available in Zabud. */
-public class HelpCommand extends Command {
+public final class HelpCommand extends Command {
     /** The user input that invokes this command. */
     public static final String COMMAND = "help";
 
     /** Creates a command that displays available command syntax. */
     private HelpCommand(Session session) { super(session); }
 
-    /** Builds a help command from validated input. */
+    /**
+     * Builds a help command from validated input.
+     *
+     * @param tokens validated values supplied after the command name
+     * @param session current application session
+     * @return executable help command
+     */
     public static Command build(List<ParsedToken> tokens, Session session) {
         return new HelpCommand(session);
     }
 
-    /** Checks that no value follows the command name. */
+    /**
+     * Checks that no value follows the command name.
+     *
+     * @param tokens parsed values supplied after the command name
+     * @param session current application session
+     * @return whether the input contains no arguments
+     */
     public static boolean check(List<ParsedToken> tokens, Session session) {
         return hasTokenNames(tokens, Parser.DEFAULT_TOKEN) && tokens.getFirst().value().isBlank();
     }
 
-    /** Returns guidance for invalid help input. */
+    /**
+     * Returns guidance for invalid help input.
+     *
+     * @return valid help syntax
+     */
     public static String hint() { return " Use 'help'."; }
 
     /** {@inheritDoc} */

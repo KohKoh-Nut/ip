@@ -7,7 +7,7 @@ import java.util.stream.Collectors;
 /** Base class for command tokens that validate and convert one input value. */
 public abstract class Token implements Validatable {
     /** Token name displayed in validation guidance. */
-    protected String name;
+    protected final String name;
     /** Raw value supplied after the token. */
     protected final String value;
 
@@ -56,14 +56,4 @@ public abstract class Token implements Validatable {
      */
     protected abstract String requirement();
 
-    /**
-     * Renames this token for command-specific parsing and guidance.
-     *
-     * @param name new token name, with or without a leading slash
-     * @return this token
-     */
-    public Token rename(String name) {
-        this.name = name.startsWith("/") ? name.substring(1) : name;
-        return this;
-    }
 }

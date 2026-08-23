@@ -107,7 +107,12 @@ public final class Parser {
         return parsed.subList(1, parsed.size());
     }
 
-    /** Returns validation guidance for a parser result. */
+    /**
+     * Returns validation guidance for a parser result.
+     *
+     * @param parsed complete parser result, including the command entry
+     * @return guidance supplied by the selected command definition
+     */
     public static String hint(List<ParsedToken> parsed) {
         if (parsed.isEmpty() || !parsed.getFirst().name().equals(COMMAND_TOKEN)) {
             return UnknownCommand.hint();
@@ -142,7 +147,13 @@ public final class Parser {
         return -1;
     }
 
-    /** Associates one command name with its construction and validation behavior. */
+    /**
+     * Associates one command name with its construction and validation behavior.
+     *
+     * @param builder function that constructs the executable command
+     * @param validator function that checks parsed values before construction
+     * @param hint guidance returned when validation fails
+     */
     private record Definition(CommandBuilder builder,
             BiPredicate<List<ParsedToken>, Session> validator, Supplier<String> hint) {
     }

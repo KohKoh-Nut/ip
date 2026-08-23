@@ -12,7 +12,7 @@ import session.Session;
 import tasks.Event;
 
 /** Adds a task with a start and end time. */
-public class EventCommand extends TaskCommand {
+public final class EventCommand extends TaskCommand {
     /** The user input that invokes this command. */
     public static final String COMMAND = "event";
     /** Name of the token introducing the event start. */
@@ -54,7 +54,13 @@ public class EventCommand extends TaskCommand {
                 new DateTimeToken(TO_TOKEN, tokens.get(2).value()), session);
     }
 
-    /** Checks the description, token names, and typed event boundaries. */
+    /**
+     * Checks the description, token names, and typed event boundaries.
+     *
+     * @param tokens parsed values supplied after the command name
+     * @param session current application session
+     * @return whether the event input is valid
+     */
     public static boolean check(List<ParsedToken> tokens, Session session) {
         if (!hasTokenNames(tokens, Parser.DEFAULT_TOKEN, FROM_TOKEN, TO_TOKEN)
                 || tokens.getFirst().value().isBlank()) return false;
@@ -63,7 +69,11 @@ public class EventCommand extends TaskCommand {
         return from.check() && to.check();
     }
 
-    /** Returns guidance for invalid event input. */
+    /**
+     * Returns guidance for invalid event input.
+     *
+     * @return valid event syntax and requirements
+     */
     public static String hint() {
         List<DateTimeToken> hintTokens = List.of(
                 new DateTimeToken(FROM_TOKEN, ""), new DateTimeToken(TO_TOKEN, ""));

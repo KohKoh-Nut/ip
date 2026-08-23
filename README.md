@@ -97,10 +97,11 @@ is parsed as:
 (command, deadline), (default, test), (by, 1200)
 ```
 
-The parser uses the `command` value to select a command class, removes that first entry, and passes
-the remaining values to the command's builder. The command then checks its expected token names and
-order. Plain values such as `default` are handled directly by the command, while typed values such
-as `/by`, `/from`, and `/to` are validated and converted by `DateTimeToken`.
+The parser uses the `command` value to select the matching validator and `CommandBuilder`, then
+removes the command entry. The command-specific validator checks the remaining token names, order,
+and values before the builder is called. Plain values such as `default` are handled directly, while
+typed values such as `/by`, `/from`, and `/to` are checked by `DateTimeToken`. Only valid input is
+built into an executable command; an unsupported command name uses `UnknownCommand` as a fallback.
 
 ## Command history
 

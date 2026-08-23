@@ -8,7 +8,7 @@ import session.Session;
 import tasks.Task;
 
 /** Removes a task from the current session. */
-public class DeleteCommand extends Command {
+public final class DeleteCommand extends Command {
     /** The user input that invokes this command. */
     public static final String COMMAND = "delete";
 
@@ -37,12 +37,22 @@ public class DeleteCommand extends Command {
         return new DeleteCommand(taskNumber(tokens), session);
     }
 
-    /** Checks that the default value identifies an existing task. */
+    /**
+     * Checks that the default value identifies an existing task.
+     *
+     * @param tokens parsed values supplied after the command name
+     * @param session current application session
+     * @return whether the delete input identifies an existing task
+     */
     public static boolean check(List<ParsedToken> tokens, Session session) {
         return hasExistingTaskNumber(tokens, session);
     }
 
-    /** Returns guidance for invalid delete input. */
+    /**
+     * Returns guidance for invalid delete input.
+     *
+     * @return valid delete syntax and requirements
+     */
     public static String hint() {
         return formatHint(COMMAND + " " + TASK_NUMBER, TASK_NUMBER_REQUIREMENT);
     }

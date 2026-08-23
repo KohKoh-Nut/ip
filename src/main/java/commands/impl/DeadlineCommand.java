@@ -12,7 +12,7 @@ import session.Session;
 import tasks.Deadline;
 
 /** Adds a task with a deadline. */
-public class DeadlineCommand extends TaskCommand {
+public final class DeadlineCommand extends TaskCommand {
     /** The user input that invokes this command. */
     public static final String COMMAND = "deadline";
     /** Tokens required after the command name. */
@@ -47,14 +47,24 @@ public class DeadlineCommand extends TaskCommand {
                 new DateTimeToken(BY_TOKEN, tokens.get(1).value()), session);
     }
 
-    /** Checks the description, token names, and typed deadline value. */
+    /**
+     * Checks the description, token names, and typed deadline value.
+     *
+     * @param tokens parsed values supplied after the command name
+     * @param session current application session
+     * @return whether the deadline input is valid
+     */
     public static boolean check(List<ParsedToken> tokens, Session session) {
         return hasTokenNames(tokens, Parser.DEFAULT_TOKEN, BY_TOKEN)
                 && !tokens.getFirst().value().isBlank()
                 && new DateTimeToken(BY_TOKEN, tokens.get(1).value()).check();
     }
 
-    /** Returns guidance for invalid deadline input. */
+    /**
+     * Returns guidance for invalid deadline input.
+     *
+     * @return valid deadline syntax and requirements
+     */
     public static String hint() {
         List<DateTimeToken> hintTokens = List.of(new DateTimeToken(BY_TOKEN, ""));
         return formatHint(COMMAND + " " + DESCRIPTION + " " + Token.composeHints(hintTokens),

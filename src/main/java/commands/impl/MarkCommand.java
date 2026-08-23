@@ -8,7 +8,7 @@ import session.Session;
 import tasks.Task;
 
 /** Marks a task as done. */
-public class MarkCommand extends Command {
+public final class MarkCommand extends Command {
     /** The user input that invokes this command. */
     public static final String COMMAND = "mark";
     /** Parsed one-based task number, or {@code -1} for invalid input. */
@@ -36,12 +36,22 @@ public class MarkCommand extends Command {
         return new MarkCommand(taskNumber(tokens), session);
     }
 
-    /** Checks that the default value identifies an existing task. */
+    /**
+     * Checks that the default value identifies an existing task.
+     *
+     * @param tokens parsed values supplied after the command name
+     * @param session current application session
+     * @return whether the mark input identifies an existing task
+     */
     public static boolean check(List<ParsedToken> tokens, Session session) {
         return hasExistingTaskNumber(tokens, session);
     }
 
-    /** Returns guidance for invalid mark input. */
+    /**
+     * Returns guidance for invalid mark input.
+     *
+     * @return valid mark syntax and requirements
+     */
     public static String hint() {
         return formatHint(COMMAND + " " + TASK_NUMBER, TASK_NUMBER_REQUIREMENT);
     }
