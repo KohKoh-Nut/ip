@@ -16,6 +16,10 @@ public class TaskList {
     /** Called after a mutation so the owning session can persist the list. */
     private Runnable changeListener = () -> { };
 
+    /** Creates an empty task list. */
+    public TaskList() {
+    }
+
     /**
      * Sets the callback invoked after a task list mutation.
      *

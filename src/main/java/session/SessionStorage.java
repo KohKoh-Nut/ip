@@ -16,7 +16,7 @@ import tasks.Task;
 import tasks.Todo;
 
 /** Reads and writes all persistent session data using a small, escaped text format. */
-public final class SessionStorage {
+final class SessionStorage {
     /** Record type used for command-history entries. */
     private static final String COMMAND_RECORD = "C";
 
