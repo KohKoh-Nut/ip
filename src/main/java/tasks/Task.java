@@ -40,6 +40,33 @@ public abstract class Task {
     }
 
     /**
+     * Returns whether this task is completed.
+     *
+     * @return whether the task is done
+     */
+    public boolean isDone() {
+        return isDone;
+    }
+
+    /**
+     * Returns task-specific values needed by the session storage layer.
+     *
+     * @return additional values in persistence order
+     */
+    public String[] getStorageDetails() {
+        return new String[0];
+    }
+
+    /**
+     * Returns the task type code for persistence.
+     *
+     * @return the one-letter task type code
+     */
+    public String storageType() {
+        return getTaskType();
+    }
+
+    /**
      * Returns the status icon used when displaying this task.
      *
      * @return {@code "X"} for a completed task or a space otherwise

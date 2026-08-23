@@ -22,6 +22,7 @@ public class UnmarkCommand extends Command {
     @Override public void execute() {
         Task task = session.getTaskList().get(taskNumber());
         task.markAsNotDone();
+        session.save();
         System.out.println(" OK, I've marked this task as not done yet:");
         System.out.println("   " + task);
     }
