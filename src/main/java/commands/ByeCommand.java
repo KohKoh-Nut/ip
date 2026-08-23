@@ -1,6 +1,6 @@
 package commands;
 
-import tasks.TaskList;
+import session.Session;
 
 /** Ends the current Zabud session. */
 public class ByeCommand extends Command {
@@ -14,9 +14,9 @@ public class ByeCommand extends Command {
      * Creates a command that ends the current session.
      *
      * @param input the complete line entered by the user
-     * @param taskList the task list for the current session
+     * @param session the current session
      */
-    public ByeCommand(String input, TaskList taskList) { super(input, taskList); }
+    public ByeCommand(String input, Session session) { super(input, session); }
 
     /** {@inheritDoc} */
     @Override public void execute() {

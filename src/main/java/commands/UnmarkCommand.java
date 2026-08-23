@@ -1,7 +1,7 @@
 package commands;
 
+import session.Session;
 import tasks.Task;
-import tasks.TaskList;
 
 /** Marks a task as not done. */
 public class UnmarkCommand extends Command {
@@ -14,20 +14,21 @@ public class UnmarkCommand extends Command {
      * Creates a command that marks a task as not done.
      *
      * @param input the complete line entered by the user
-     * @param taskList the task list for the current session
+     * @param session the current session
      */
-    public UnmarkCommand(String input, TaskList taskList) { super(input, taskList); }
+    public UnmarkCommand(String input, Session session) { super(input, session); }
 
     /** {@inheritDoc} */
     @Override public void execute() {
-        Task task = taskList.get(taskNumber());
+        Task task = session.getTaskList().get(taskNumber());
         task.markAsNotDone();
         System.out.println(" OK, I've marked this task as not done yet:");
         System.out.println("   " + task);
     }
     /** {@inheritDoc} */
     @Override public boolean check() {
-        return taskNumber() > 0 && taskList.get(taskNumber()) != null && REQUIRED_TOKENS.length == 0;
+        return taskNumber() > 0 && session.getTaskList().get(taskNumber()) != null
+                && REQUIRED_TOKENS.length == 0;
     }
     /** {@inheritDoc} */
     @Override public String hint() { return " Please specify a valid task number."; }

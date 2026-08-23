@@ -1,6 +1,6 @@
 package commands;
 
-import tasks.TaskList;
+import session.Session;
 
 /** Displays all tasks in the current session. */
 public class ListCommand extends Command {
@@ -13,12 +13,12 @@ public class ListCommand extends Command {
      * Creates a command that displays all tasks.
      *
      * @param input the complete line entered by the user
-     * @param taskList the task list for the current session
+     * @param session the current session
      */
-    public ListCommand(String input, TaskList taskList) { super(input, taskList); }
+    public ListCommand(String input, Session session) { super(input, session); }
 
     /** {@inheritDoc} */
-    @Override public void execute() { taskList.printTasks(); }
+    @Override public void execute() { session.getTaskList().printTasks(); }
     /** {@inheritDoc} */
     @Override public boolean check() { return REQUIRED_TOKENS.length == 0; }
     /** {@inheritDoc} */

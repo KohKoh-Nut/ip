@@ -1,7 +1,7 @@
 package commands;
 
 import tasks.Event;
-import tasks.TaskList;
+import session.Session;
 
 /** Adds a task with a start and end time. */
 public class EventCommand extends TaskCommand {
@@ -14,9 +14,9 @@ public class EventCommand extends TaskCommand {
      * Creates a command that adds an event task.
      *
      * @param input the complete line entered by the user
-     * @param taskList the task list for the current session
+     * @param session the current session
      */
-    public EventCommand(String input, TaskList taskList) { super(input, taskList); }
+    public EventCommand(String input, Session session) { super(input, session); }
 
     /** {@inheritDoc} */
     @Override public void execute() {

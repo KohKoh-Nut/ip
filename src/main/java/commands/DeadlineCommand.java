@@ -1,7 +1,7 @@
 package commands;
 
 import tasks.Deadline;
-import tasks.TaskList;
+import session.Session;
 
 /** Adds a task with a deadline. */
 public class DeadlineCommand extends TaskCommand {
@@ -14,9 +14,9 @@ public class DeadlineCommand extends TaskCommand {
      * Creates a command that adds a deadline task.
      *
      * @param input the complete line entered by the user
-     * @param taskList the task list for the current session
+     * @param session the current session
      */
-    public DeadlineCommand(String input, TaskList taskList) { super(input, taskList); }
+    public DeadlineCommand(String input, Session session) { super(input, session); }
 
     /** {@inheritDoc} */
     @Override public void execute() {

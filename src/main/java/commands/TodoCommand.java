@@ -1,6 +1,6 @@
 package commands;
 
-import tasks.TaskList;
+import session.Session;
 import tasks.Todo;
 
 /** Adds a to-do task. */
@@ -14,9 +14,9 @@ public class TodoCommand extends TaskCommand {
      * Creates a command that adds a to-do task.
      *
      * @param input the complete line entered by the user
-     * @param taskList the task list for the current session
+     * @param session the current session
      */
-    public TodoCommand(String input, TaskList taskList) { super(input, taskList); }
+    public TodoCommand(String input, Session session) { super(input, session); }
 
     /** {@inheritDoc} */
     @Override public void execute() { addTask(new Todo(description())); }

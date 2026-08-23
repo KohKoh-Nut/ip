@@ -1,4 +1,6 @@
-package tasks;
+package session;
+
+import tasks.Task;
 
 /** Stores the tasks entered during one Zabud session. */
 public class TaskList {

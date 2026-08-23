@@ -1,7 +1,7 @@
 package commands;
 
+import session.Session;
 import tasks.Task;
-import tasks.TaskList;
 
 /** Provides shared behavior for commands that add a task. */
 public abstract class TaskCommand extends Command {
@@ -9,10 +9,10 @@ public abstract class TaskCommand extends Command {
      * Creates a command that adds a task.
      *
      * @param input the complete line entered by the user
-     * @param taskList the task list for the current session
+     * @param session the current session
      */
-    protected TaskCommand(String input, TaskList taskList) {
-        super(input, taskList);
+    protected TaskCommand(String input, Session session) {
+        super(input, session);
     }
 
     /**
@@ -21,7 +21,7 @@ public abstract class TaskCommand extends Command {
      * @param task the validated task to add
      */
     protected void addTask(Task task) {
-        if (taskList.add(task)) {
+        if (session.getTaskList().add(task)) {
             System.out.println(" Got it. I've added this task:");
             System.out.println("   " + task);
         } else {

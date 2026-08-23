@@ -1,24 +1,24 @@
 package commands;
 
-import tasks.TaskList;
+import session.Session;
 
 /** Defines a command that can validate and act on one line of user input. */
 public abstract class Command {
     /** The complete line entered by the user. */
     protected final String input;
 
-    /** The task list this command may read or update. */
-    protected final TaskList taskList;
+    /** The session this command may read or update. */
+    protected final Session session;
 
     /**
-     * Creates a command with the input and task list it will operate on.
+     * Creates a command with the input and session it will operate on.
      *
      * @param input the complete line entered by the user
-     * @param taskList the task list for the current session
+     * @param session the current session
      */
-    protected Command(String input, TaskList taskList) {
+    protected Command(String input, Session session) {
         this.input = input;
-        this.taskList = taskList;
+        this.session = session;
     }
 
     /** Executes this command's effect. */
@@ -51,11 +51,11 @@ public abstract class Command {
      * Creates, validates, and invokes the command matching the given input.
      *
      * @param input the complete line entered by the user
-     * @param taskList the task list for the current session
+     * @param session the current session
      * @return whether the application should continue running
      */
-    public static boolean invoke(String input, TaskList taskList) {
-        Command command = createCommand(input, taskList);
+    public static boolean invoke(String input, Session session) {
+        Command command = createCommand(input, session);
         if (command.check()) {
             command.execute();
         } else {
@@ -68,27 +68,27 @@ public abstract class Command {
      * Selects the command subclass that handles the given input.
      *
      * @param input the complete line entered by the user
-     * @param taskList the task list for the current session
+     * @param session the current session
      * @return the command responsible for the input
      */
-    private static Command createCommand(String input, TaskList taskList) {
-        if (input.equals(ByeCommand.COMMAND)) return new ByeCommand(input, taskList);
-        if (input.equals(ListCommand.COMMAND)) return new ListCommand(input, taskList);
+    private static Command createCommand(String input, Session session) {
+        if (input.equals(ByeCommand.COMMAND)) return new ByeCommand(input, session);
+        if (input.equals(ListCommand.COMMAND)) return new ListCommand(input, session);
         if (input.equals(MarkCommand.COMMAND) || input.startsWith(MarkCommand.COMMAND + " ")) {
-            return new MarkCommand(input, taskList);
+            return new MarkCommand(input, session);
         }
         if (input.equals(UnmarkCommand.COMMAND) || input.startsWith(UnmarkCommand.COMMAND + " ")) {
-            return new UnmarkCommand(input, taskList);
+            return new UnmarkCommand(input, session);
         }
         if (input.equals(TodoCommand.COMMAND) || input.startsWith(TodoCommand.COMMAND + " ")) {
-            return new TodoCommand(input, taskList);
+            return new TodoCommand(input, session);
         }
         if (input.equals(DeadlineCommand.COMMAND) || input.startsWith(DeadlineCommand.COMMAND + " ")) {
-            return new DeadlineCommand(input, taskList);
+            return new DeadlineCommand(input, session);
         }
         if (input.equals(EventCommand.COMMAND) || input.startsWith(EventCommand.COMMAND + " ")) {
-            return new EventCommand(input, taskList);
+            return new EventCommand(input, session);
         }
-        return new UnknownCommand(input, taskList);
+        return new UnknownCommand(input, session);
     }
 }

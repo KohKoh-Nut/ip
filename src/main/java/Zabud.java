@@ -1,7 +1,7 @@
 import java.util.Scanner;
 
 import commands.Command;
-import tasks.TaskList;
+import session.Session;
 
 /** Runs Zabud, a command-line assistant that stores tasks for the current session. */
 public class Zabud {
@@ -18,13 +18,13 @@ public class Zabud {
      * @param args command-line arguments; not used by this application
      */
     public static void main(String[] args) {
-        TaskList taskList = new TaskList();
+        Session session = new Session();
         printWelcome();
 
         Scanner scanner = new Scanner(System.in);
         while (scanner.hasNextLine()) {
             System.out.println(SEPARATOR);
-            if (!Command.invoke(scanner.nextLine(), taskList)) {
+            if (!Command.invoke(scanner.nextLine(), session)) {
                 break;
             }
         }

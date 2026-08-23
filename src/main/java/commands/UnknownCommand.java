@@ -1,6 +1,6 @@
 package commands;
 
-import tasks.TaskList;
+import session.Session;
 
 /** Handles input that does not match a supported command. */
 public class UnknownCommand extends Command {
@@ -13,9 +13,9 @@ public class UnknownCommand extends Command {
      * Creates a command that displays guidance for unsupported input.
      *
      * @param input the complete line entered by the user
-     * @param taskList the task list for the current session
+     * @param session the current session
      */
-    public UnknownCommand(String input, TaskList taskList) { super(input, taskList); }
+    public UnknownCommand(String input, Session session) { super(input, session); }
 
     /** {@inheritDoc} */
     @Override public void execute() {
