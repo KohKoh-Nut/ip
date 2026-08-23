@@ -1,6 +1,10 @@
 package commands.impl;
 
+import java.util.List;
+
 import commands.Command;
+import commands.ParsedToken;
+import commands.Parser;
 import session.Session;
 
 /** Ends the current Zabud session. */
@@ -8,16 +12,13 @@ public class ByeCommand extends Command {
     /** The user input that invokes this command. */
     public static final String COMMAND = "bye";
 
-    /** Tokens required after the command name. */
-    private static final String[] REQUIRED_TOKENS = {};
-
     /**
      * Creates a command that ends the current session.
      *
-     * @param input the complete line entered by the user
+     * @param tokens structured values supplied after the command name
      * @param session the current session
      */
-    public ByeCommand(String input, Session session) { super(input, session); }
+    public ByeCommand(List<ParsedToken> tokens, Session session) { super(tokens, session); }
 
     /** {@inheritDoc} */
     @Override public void execute() {
@@ -25,7 +26,9 @@ public class ByeCommand extends Command {
         System.out.println("____________________________________________________________");
     }
     /** {@inheritDoc} */
-    @Override public boolean check() { return REQUIRED_TOKENS.length == 0; }
+    @Override public boolean check() {
+        return hasTokenNames(tokens, Parser.DEFAULT_TOKEN) && tokens.getFirst().value().isBlank();
+    }
     /** {@inheritDoc} */
     @Override public String hint() { return ""; }
     /** {@inheritDoc} */

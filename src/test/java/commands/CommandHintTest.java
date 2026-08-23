@@ -5,9 +5,7 @@ import java.io.PrintStream;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 
-import commands.impl.DeleteCommand;
 import commands.impl.HelpCommand;
-import commands.impl.TodoCommand;
 import commands.impl.UnknownCommand;
 import session.Session;
 
@@ -19,17 +17,18 @@ public final class CommandHintTest {
     /** Verifies description, task-number, unknown-command, and help guidance. */
     public static void main(String[] args) throws Exception {
         Session session = new Session(Files.createTempDirectory("zabud-hint").resolve("session.txt"));
-        assert new TodoCommand("todo", session).hint().contains("todo DESCRIPTION");
-        assert new TodoCommand("todo", session).hint().contains("- DESCRIPTION:");
-        assert new DeleteCommand("delete", session).hint().contains("delete TASK_NUMBER");
-        assert new DeleteCommand("delete", session).hint().contains("- TASK_NUMBER:");
-        assert new UnknownCommand("unknown", session).hint().contains("Use 'help'");
+        assert Parser.build("todo", session).hint().contains("todo DESCRIPTION");
+        assert Parser.build("todo", session).hint().contains("- DESCRIPTION:");
+        assert Parser.build("delete", session).hint().contains("delete TASK_NUMBER");
+        assert Parser.build("delete", session).hint().contains("- TASK_NUMBER:");
+        assert Parser.build("unknown", session) instanceof UnknownCommand;
+        assert Parser.build("unknown", session).hint().contains("Use 'help'");
 
         ByteArrayOutputStream output = new ByteArrayOutputStream();
         PrintStream original = System.out;
         try {
             System.setOut(new PrintStream(output, true, StandardCharsets.UTF_8));
-            new HelpCommand("help", session).execute();
+            ((HelpCommand) Parser.build("help", session)).execute();
         } finally {
             System.setOut(original);
         }

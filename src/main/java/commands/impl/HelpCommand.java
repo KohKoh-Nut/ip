@@ -3,6 +3,8 @@ package commands.impl;
 import java.util.List;
 
 import commands.Command;
+import commands.ParsedToken;
+import commands.Parser;
 import commands.Token;
 import commands.tokens.DateTimeToken;
 import session.Session;
@@ -12,17 +14,14 @@ public class HelpCommand extends Command {
     /** The user input that invokes this command. */
     public static final String COMMAND = "help";
 
-    /** Tokens required after the command name. */
-    private static final String[] REQUIRED_TOKENS = {};
-
     /**
      * Creates a command that displays available command syntax.
      *
-     * @param input the complete line entered by the user
+     * @param tokens structured values supplied after the command name
      * @param session the current session
      */
-    public HelpCommand(String input, Session session) {
-        super(input, session);
+    public HelpCommand(List<ParsedToken> tokens, Session session) {
+        super(tokens, session);
     }
 
     /** {@inheritDoc} */
@@ -51,7 +50,7 @@ public class HelpCommand extends Command {
     /** {@inheritDoc} */
     @Override
     public boolean check() {
-        return REQUIRED_TOKENS.length == 0;
+        return hasTokenNames(tokens, Parser.DEFAULT_TOKEN) && tokens.getFirst().value().isBlank();
     }
 
     /** {@inheritDoc} */
