@@ -2,53 +2,50 @@ package commands.impl;
 
 import java.util.List;
 
+import commands.Buildable;
 import commands.Command;
 import commands.ParsedToken;
 import commands.Parser;
 import commands.Token;
+import commands.Validatable;
 import commands.tokens.DateTimeToken;
 import session.Session;
 
-/** Displays the commands available in Zabud. */
-public final class HelpCommand extends Command {
-    /** The user input that invokes this command. */
+/** Validates and builds commands that display usage guidance. */
+public final class HelpCommand implements Validatable, Buildable {
+    /** The user input that selects this command type. */
     public static final String COMMAND = "help";
 
-    /** Creates a command that displays available command syntax. */
-    private HelpCommand(Session session) { super(session); }
-
-    /**
-     * Builds a help command from validated input.
-     *
-     * @param tokens validated values supplied after the command name
-     * @param session current application session
-     * @return executable help command
-     */
-    public static Command build(List<ParsedToken> tokens, Session session) {
-        return new HelpCommand(session);
+    /** Creates a help command handler. */
+    public HelpCommand() {
     }
-
-    /**
-     * Checks that no value follows the command name.
-     *
-     * @param tokens parsed values supplied after the command name
-     * @param session current application session
-     * @return whether the input contains no arguments
-     */
-    public static boolean check(List<ParsedToken> tokens, Session session) {
-        return hasTokenNames(tokens, Parser.DEFAULT_TOKEN) && tokens.getFirst().value().isBlank();
-    }
-
-    /**
-     * Returns guidance for invalid help input.
-     *
-     * @return valid help syntax
-     */
-    public static String hint() { return " Use 'help'."; }
 
     /** {@inheritDoc} */
     @Override
-    public void execute() {
+    public boolean check(List<ParsedToken> tokens, Session session) {
+        return Validatable.hasTokenNames(tokens, Parser.DEFAULT_TOKEN)
+                && tokens.getFirst().value().isBlank();
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public String hint() {
+        return " Use 'help'.";
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public Command build(List<ParsedToken> tokens, Session session) {
+        return new Command(session) {
+            @Override
+            public void execute() {
+                printHelp();
+            }
+        };
+    }
+
+    /** Prints all available command syntax and input requirements. */
+    private static void printHelp() {
         DateTimeToken by = new DateTimeToken("by", "");
         DateTimeToken from = new DateTimeToken("from", "");
         DateTimeToken to = new DateTimeToken("to", "");
@@ -68,5 +65,4 @@ public final class HelpCommand extends Command {
         System.out.println(TASK_NUMBER_REQUIREMENT);
         System.out.println(Token.composeRequirements(List.of(by, from, to)));
     }
-
 }

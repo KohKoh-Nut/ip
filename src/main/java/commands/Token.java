@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 /** Base class for command tokens that validate and convert one input value. */
-public abstract class Token implements Validatable {
+public abstract class Token {
     /** Token name displayed in validation guidance. */
     protected final String name;
     /** Raw value supplied after the token. */
@@ -55,5 +55,19 @@ public abstract class Token implements Validatable {
      * @return plain-language value requirement
      */
     protected abstract String requirement();
+
+    /**
+     * Checks whether this typed token contains a valid value.
+     *
+     * @return whether the token value is valid
+     */
+    public abstract boolean check();
+
+    /**
+     * Returns the placeholder used for this token's value.
+     *
+     * @return token value placeholder
+     */
+    public abstract String hint();
 
 }

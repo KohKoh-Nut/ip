@@ -6,8 +6,6 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
 
-import commands.impl.DeadlineCommand;
-import commands.impl.EventCommand;
 import session.Session;
 import tasks.Deadline;
 
@@ -26,7 +24,7 @@ public final class TaskCommandTest {
                 + " - DATE_OR_TIME: enter a date as DD/MM/YYYY, a 24-hour time as HHMM, "
                 + "or both as DD/MM/YYYY HHMM.");
         assert Parser.check(deadlineInput, session);
-        DeadlineCommand command = (DeadlineCommand) Parser.build(deadlineInput, session);
+        Command command = Parser.build(deadlineInput, session);
         command.execute();
         assert session.getTaskList().get(1) instanceof Deadline;
         Deadline deadline = (Deadline) session.getTaskList().get(1);
@@ -40,7 +38,7 @@ public final class TaskCommandTest {
                 + " - DATE_OR_TIME: enter a date as DD/MM/YYYY, a 24-hour time as HHMM, "
                 + "or both as DD/MM/YYYY HHMM.");
         assert Parser.check(eventInput, session);
-        assert Parser.build(eventInput, session) instanceof EventCommand;
+        assert Parser.build(eventInput, session) != null;
         assert !Parser.check(Parser.parse("event meeting /to 1900 /from 1800"), session);
         assert !Parser.check(Parser.parse("deadline test /when 1200"), session);
     }

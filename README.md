@@ -97,11 +97,12 @@ is parsed as:
 (command, deadline), (default, test), (by, 1200)
 ```
 
-The parser uses the `command` value to select the matching validator and `CommandBuilder`, then
-removes the command entry. The command-specific validator checks the remaining token names, order,
-and values before the builder is called. Plain values such as `default` are handled directly, while
-typed values such as `/by`, `/from`, and `/to` are checked by `DateTimeToken`. Only valid input is
-built into an executable command; an unsupported command name uses `UnknownCommand` as a fallback.
+Every type in `commands.impl` implements `Validatable` and `Buildable`. The parser uses the
+`command` value to select the corresponding command handler, then removes the command entry. It
+calls `check()` on that handler before construction. Valid input is passed to `build()` and the
+returned command is executed; invalid input prints the same handler's `hint()` without calling
+`build()`. Plain values such as `default` are handled directly, while typed values such as `/by`,
+`/from`, and `/to` are checked by `DateTimeToken`.
 
 ## Command history
 

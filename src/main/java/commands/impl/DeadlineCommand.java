@@ -2,77 +2,54 @@ package commands.impl;
 
 import java.util.List;
 
+import commands.Buildable;
 import commands.Command;
 import commands.ParsedToken;
 import commands.Parser;
 import commands.TaskCommand;
 import commands.Token;
+import commands.Validatable;
 import commands.tokens.DateTimeToken;
 import session.Session;
 import tasks.Deadline;
 
-/** Adds a task with a deadline. */
-public final class DeadlineCommand extends TaskCommand {
-    /** The user input that invokes this command. */
+/** Validates and builds commands that add deadline tasks. */
+public final class DeadlineCommand implements Validatable, Buildable {
+    /** The user input that selects this command type. */
     public static final String COMMAND = "deadline";
-    /** Tokens required after the command name. */
+    /** Name of the token introducing the deadline value. */
     private static final String BY_TOKEN = "by";
-    /** Parsed task description. */
-    private final String description;
-    /** Parsed and typed deadline value. */
-    private final DateTimeToken by;
 
-    /**
-     * Creates a command that adds a deadline task.
-     *
-     * @param description validated task description
-     * @param by validated deadline value
-     * @param session the current session
-     */
-    private DeadlineCommand(String description, DateTimeToken by, Session session) {
-        super(session);
-        this.description = description;
-        this.by = by;
+    /** Creates a deadline command handler. */
+    public DeadlineCommand() {
     }
 
-    /**
-     * Builds a deadline command from parser-produced values.
-     *
-     * @param tokens structured values supplied after the command name
-     * @param session current application session
-     * @return deadline command containing the parsed values
-     */
-    public static Command build(List<ParsedToken> tokens, Session session) {
-        return new DeadlineCommand(tokens.getFirst().value(),
-                new DateTimeToken(BY_TOKEN, tokens.get(1).value()), session);
-    }
-
-    /**
-     * Checks the description, token names, and typed deadline value.
-     *
-     * @param tokens parsed values supplied after the command name
-     * @param session current application session
-     * @return whether the deadline input is valid
-     */
-    public static boolean check(List<ParsedToken> tokens, Session session) {
-        return hasTokenNames(tokens, Parser.DEFAULT_TOKEN, BY_TOKEN)
+    /** {@inheritDoc} */
+    @Override
+    public boolean check(List<ParsedToken> tokens, Session session) {
+        return Validatable.hasTokenNames(tokens, Parser.DEFAULT_TOKEN, BY_TOKEN)
                 && !tokens.getFirst().value().isBlank()
                 && new DateTimeToken(BY_TOKEN, tokens.get(1).value()).check();
     }
 
-    /**
-     * Returns guidance for invalid deadline input.
-     *
-     * @return valid deadline syntax and requirements
-     */
-    public static String hint() {
+    /** {@inheritDoc} */
+    @Override
+    public String hint() {
         List<DateTimeToken> hintTokens = List.of(new DateTimeToken(BY_TOKEN, ""));
-        return formatHint(COMMAND + " " + DESCRIPTION + " " + Token.composeHints(hintTokens),
+        return Validatable.formatHint(COMMAND + " " + DESCRIPTION + " " + Token.composeHints(hintTokens),
                 DESCRIPTION_REQUIREMENT, Token.composeRequirements(hintTokens));
     }
 
     /** {@inheritDoc} */
-    @Override public void execute() {
-        addTask(new Deadline(description, by.date(), by.time()));
+    @Override
+    public Command build(List<ParsedToken> tokens, Session session) {
+        String description = tokens.getFirst().value();
+        DateTimeToken by = new DateTimeToken(BY_TOKEN, tokens.get(1).value());
+        return new TaskCommand(session) {
+            @Override
+            public void execute() {
+                addTask(new Deadline(description, by.date(), by.time()));
+            }
+        };
     }
 }

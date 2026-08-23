@@ -6,7 +6,6 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.util.List;
 
-import commands.impl.HelpCommand;
 import session.Session;
 
 /** Regression checks for command usage hints and the help requirements footer. */
@@ -29,7 +28,7 @@ public final class CommandHintTest {
             System.setOut(new PrintStream(output, true, StandardCharsets.UTF_8));
             List<ParsedToken> helpInput = Parser.parse("help");
             assert Parser.check(helpInput, session);
-            ((HelpCommand) Parser.build(helpInput, session)).execute();
+            Parser.build(helpInput, session).execute();
         } finally {
             System.setOut(original);
         }

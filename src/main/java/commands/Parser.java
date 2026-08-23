@@ -2,8 +2,6 @@ package commands;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.function.BiPredicate;
-import java.util.function.Supplier;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -26,6 +24,16 @@ public final class Parser {
 
     private static final String COMMAND_TOKEN = "command";
     private static final Pattern NAMED_TOKEN = Pattern.compile("(?<!\\S)/([A-Za-z][A-Za-z0-9-]*)(?=\\s|$)");
+    private static final Handler BYE = handler(new ByeCommand());
+    private static final Handler DEADLINE = handler(new DeadlineCommand());
+    private static final Handler DELETE = handler(new DeleteCommand());
+    private static final Handler EVENT = handler(new EventCommand());
+    private static final Handler HELP = handler(new HelpCommand());
+    private static final Handler LIST = handler(new ListCommand());
+    private static final Handler MARK = handler(new MarkCommand());
+    private static final Handler TODO = handler(new TodoCommand());
+    private static final Handler UNKNOWN = handler(new UnknownCommand());
+    private static final Handler UNMARK = handler(new UnmarkCommand());
 
     /** Prevents instantiation of this utility class. */
     private Parser() {
@@ -68,8 +76,8 @@ public final class Parser {
      */
     public static boolean check(List<ParsedToken> parsed, Session session) {
         if (parsed.isEmpty() || !parsed.getFirst().name().equals(COMMAND_TOKEN)) return false;
-        Definition definition = definition(parsed.getFirst().value());
-        return definition.validator().test(arguments(parsed), session);
+        Handler handler = handler(parsed.getFirst().value());
+        return handler.validatable().check(arguments(parsed), session);
     }
 
     /**
@@ -80,8 +88,8 @@ public final class Parser {
      * @return executable command selected by the command name
      */
     public static Command build(List<ParsedToken> parsed, Session session) {
-        Definition definition = definition(parsed.getFirst().value());
-        return definition.builder().build(arguments(parsed), session);
+        Handler handler = handler(parsed.getFirst().value());
+        return handler.buildable().build(arguments(parsed), session);
     }
 
     /**
@@ -115,28 +123,30 @@ public final class Parser {
      */
     public static String hint(List<ParsedToken> parsed) {
         if (parsed.isEmpty() || !parsed.getFirst().name().equals(COMMAND_TOKEN)) {
-            return UnknownCommand.hint();
+            return UNKNOWN.validatable().hint();
         }
-        return definition(parsed.getFirst().value()).hint().get();
+        return handler(parsed.getFirst().value()).validatable().hint();
     }
 
-    /** Selects the builder, validator, and hint belonging to a command name. */
-    private static Definition definition(String command) {
+    /** Selects the command handler belonging to a command name. */
+    private static Handler handler(String command) {
         return switch (command) {
-        case ByeCommand.COMMAND -> new Definition(ByeCommand::build, ByeCommand::check, ByeCommand::hint);
-        case ListCommand.COMMAND -> new Definition(ListCommand::build, ListCommand::check, ListCommand::hint);
-        case HelpCommand.COMMAND -> new Definition(HelpCommand::build, HelpCommand::check, HelpCommand::hint);
-        case MarkCommand.COMMAND -> new Definition(MarkCommand::build, MarkCommand::check, MarkCommand::hint);
-        case UnmarkCommand.COMMAND -> new Definition(UnmarkCommand::build, UnmarkCommand::check,
-                UnmarkCommand::hint);
-        case DeleteCommand.COMMAND -> new Definition(DeleteCommand::build, DeleteCommand::check,
-                DeleteCommand::hint);
-        case TodoCommand.COMMAND -> new Definition(TodoCommand::build, TodoCommand::check, TodoCommand::hint);
-        case DeadlineCommand.COMMAND -> new Definition(DeadlineCommand::build, DeadlineCommand::check,
-                DeadlineCommand::hint);
-        case EventCommand.COMMAND -> new Definition(EventCommand::build, EventCommand::check, EventCommand::hint);
-        default -> new Definition(UnknownCommand::build, (tokens, session) -> true, UnknownCommand::hint);
+        case ByeCommand.COMMAND -> BYE;
+        case DeadlineCommand.COMMAND -> DEADLINE;
+        case DeleteCommand.COMMAND -> DELETE;
+        case EventCommand.COMMAND -> EVENT;
+        case HelpCommand.COMMAND -> HELP;
+        case ListCommand.COMMAND -> LIST;
+        case MarkCommand.COMMAND -> MARK;
+        case TodoCommand.COMMAND -> TODO;
+        case UnmarkCommand.COMMAND -> UNMARK;
+        default -> UNKNOWN;
         };
+    }
+
+    /** Creates a parser handler from one command type implementing both contracts. */
+    private static <T extends Validatable & Buildable> Handler handler(T command) {
+        return new Handler(command, command);
     }
 
     /** Returns the index of the first whitespace character, if one exists. */
@@ -147,14 +157,7 @@ public final class Parser {
         return -1;
     }
 
-    /**
-     * Associates one command name with its construction and validation behavior.
-     *
-     * @param builder function that constructs the executable command
-     * @param validator function that checks parsed values before construction
-     * @param hint guidance returned when validation fails
-     */
-    private record Definition(CommandBuilder builder,
-            BiPredicate<List<ParsedToken>, Session> validator, Supplier<String> hint) {
+    /** Associates one command type's validation and construction contracts. */
+    private record Handler(Validatable validatable, Buildable buildable) {
     }
 }
