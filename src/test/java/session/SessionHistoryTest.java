@@ -16,6 +16,8 @@ public final class SessionHistoryTest {
         assert session.previousCommand().equals("todo first");
         assert session.nextCommand().equals("todo second");
         assert session.nextCommand().equals("");
+        session.resetHistoryNavigation();
+        assert session.previousCommand().equals("todo second");
         for (int i = 0; i < Session.COMMAND_HISTORY_LIMIT + 1; i++) session.recordCommand("command " + i);
         for (int i = 0; i < Session.COMMAND_HISTORY_LIMIT - 1; i++) session.previousCommand();
         assert session.previousCommand().equals("command 1");

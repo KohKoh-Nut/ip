@@ -72,13 +72,23 @@ public class Zabud {
     /** Interprets arrow-key history navigation or clears the line for a bare escape. */
     private static void handleEscape(Reader reader, StringBuilder current, Session session) throws IOException {
         reader.ready();
-        if (!reader.ready()) { current.setLength(0); redraw(current); return; }
+        if (!reader.ready()) {
+            current.setLength(0);
+            session.resetHistoryNavigation();
+            redraw(current);
+            return;
+        }
         int bracket = reader.read();
-        if (bracket != '[' || !reader.ready()) { current.setLength(0); redraw(current); return; }
+        if (bracket != '[' || !reader.ready()) {
+            current.setLength(0);
+            session.resetHistoryNavigation();
+            redraw(current);
+            return;
+        }
         int direction = reader.read();
         if (direction == 'A') current.replace(0, current.length(), session.previousCommand());
         else if (direction == 'B') current.replace(0, current.length(), session.nextCommand());
-        else current.setLength(0);
+        else { current.setLength(0); session.resetHistoryNavigation(); }
         redraw(current);
     }
 

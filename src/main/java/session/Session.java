@@ -71,6 +71,9 @@ public class Session {
         return historyCursor < commandHistory.size() ? commandHistory.get(historyCursor) : "";
     }
 
+    /** Resets navigation so the next previous request starts at the newest command. */
+    public void resetHistoryNavigation() { historyCursor = commandHistory.size(); }
+
     /** Saves current session data and reports a user-friendly error if it fails. */
     public void save() {
         try {
