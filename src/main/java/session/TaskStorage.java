@@ -11,6 +11,8 @@ import tasks.Deadline;
 import tasks.Event;
 import tasks.Task;
 import tasks.Todo;
+import java.time.LocalDate;
+import java.time.LocalTime;
 
 /** Reads and writes the task list using a small, escaped text format. */
 public class TaskStorage {
@@ -65,8 +67,9 @@ public class TaskStorage {
             String description = decode(parts[2]);
             Task task = switch (parts[0]) {
                 case "T" -> new Todo(description);
-                case "D" -> parts.length == 4 ? new Deadline(description, decode(parts[3])) : null;
-                case "E" -> parts.length == 5 ? new Event(description, decode(parts[3]), decode(parts[4])) : null;
+                case "D" -> parts.length == 5 ? new Deadline(description, date(decode(parts[3])), time(decode(parts[4]))) : null;
+                case "E" -> parts.length == 7 ? new Event(description, date(decode(parts[3])), time(decode(parts[4])),
+                        date(decode(parts[5])), time(decode(parts[6]))) : null;
                 default -> null;
             };
             if (task != null && parts[1].equals("1")) task.markAsDone();
@@ -83,4 +86,7 @@ public class TaskStorage {
     private String decode(String value) {
         return new String(Base64.getUrlDecoder().decode(value), StandardCharsets.UTF_8);
     }
+
+    private LocalDate date(String value) { return value.isBlank() ? null : LocalDate.parse(value); }
+    private LocalTime time(String value) { return value.isBlank() ? null : LocalTime.parse(value); }
 }

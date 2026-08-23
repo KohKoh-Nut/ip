@@ -1,18 +1,33 @@
 package tasks;
 
+import java.time.LocalDate;
+import java.time.LocalTime;
+
 /** Represents a task that occurs between a start and end time. */
 public class Event extends Task {
     /** The event start time. */
-    private final String from;
+    private final LocalDate fromDate;
+    private final LocalTime fromTime;
 
     /** The event end time. */
-    private final String to;
+    private final LocalDate toDate;
+    private final LocalTime toTime;
 
     /** {@inheritDoc} */
     @Override
     public String[] getStorageDetails() {
-        return new String[] {from, to};
+        return new String[] {text(fromDate), text(fromTime), text(toDate), text(toTime)};
     }
+
+    /** @return the event start date or time */
+    public LocalDate getFromDate() { return fromDate; }
+    /** @return the event start time */
+    public LocalTime getFromTime() { return fromTime; }
+
+    /** @return the event end date or time */
+    public LocalDate getToDate() { return toDate; }
+    /** @return the event end time */
+    public LocalTime getToTime() { return toTime; }
 
     /**
      * Creates an event task.
@@ -21,10 +36,10 @@ public class Event extends Task {
      * @param from the event start time
      * @param to the event end time
      */
-    public Event(String description, String from, String to) {
+    public Event(String description, LocalDate fromDate, LocalTime fromTime, LocalDate toDate, LocalTime toTime) {
         super(description);
-        this.from = from;
-        this.to = to;
+        this.fromDate = fromDate; this.fromTime = fromTime;
+        this.toDate = toDate; this.toTime = toTime;
     }
 
     /**
@@ -44,6 +59,11 @@ public class Event extends Task {
      */
     @Override
     protected String getAdditionalDetails() {
-        return " (from: " + from + " to: " + to + ")";
+        return " (from: " + combined(fromDate, fromTime) + " to: " + combined(toDate, toTime) + ")";
+    }
+
+    private static String text(Object value) { return value == null ? "" : value.toString(); }
+    private static String combined(LocalDate date, LocalTime time) {
+        return date == null ? text(time) : time == null ? text(date) : date + " " + time;
     }
 }

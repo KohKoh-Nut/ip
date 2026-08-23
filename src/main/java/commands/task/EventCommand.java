@@ -1,4 +1,9 @@
-package commands;
+package commands.task;
+
+import commands.TaskCommand;
+import commands.tokens.DateTimeToken;
+import tasks.Event;
+import session.Session;
 
 import tasks.Event;
 import session.Session;
@@ -21,17 +26,19 @@ public class EventCommand extends TaskCommand {
     /** {@inheritDoc} */
     @Override public void execute() {
         String[] details = details();
-        addTask(new Event(details[0], details[1], details[2]));
+        DateTimeToken from = token("/from", details[1]);
+        DateTimeToken to = token("/to", details[2]);
+        addTask(new Event(details[0], from.date(), from.time(), to.date(), to.time()));
     }
     /** {@inheritDoc} */
     @Override public boolean check() {
         String[] details = details();
-        return details != null && !details[0].isBlank() && !details[1].isBlank() && !details[2].isBlank();
+        return details != null && !details[0].isBlank()
+                && token("/from", details[1]).check() && token("/to", details[2]).check();
     }
     /** {@inheritDoc} */
     @Override public String hint() {
-        return " Use '" + COMMAND + " DESCRIPTION " + REQUIRED_TOKENS[0]
-                + " START " + REQUIRED_TOKENS[1] + " END'.";
+        return token("/from", "START").hint() + token("/to", "END").hint();
     }
 
     /**
@@ -47,4 +54,6 @@ public class EventCommand extends TaskCommand {
         if (times.length != 2) return null;
         return new String[] {descriptionAndTimes[0].trim(), times[0].trim(), times[1].trim()};
     }
+
+    private DateTimeToken token(String name, String value) { return new DateTimeToken(name, value); }
 }

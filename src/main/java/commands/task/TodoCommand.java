@@ -1,4 +1,8 @@
-package commands;
+package commands.task;
+
+import commands.TaskCommand;
+import tasks.Todo;
+import session.Session;
 
 import session.Session;
 import tasks.Todo;

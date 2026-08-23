@@ -1,23 +1,27 @@
 package tasks;
 
+import java.time.LocalDate;
+import java.time.LocalTime;
+
 /** Represents a task that must be completed by a specified time. */
 public class Deadline extends Task {
     /** The time by which this task must be completed. */
-    private final String by;
+    private final LocalDate date;
+    private final LocalTime time;
 
     /**
      * Returns the deadline value used when saving this task.
      *
      * @return the deadline value
      */
-    public String getBy() {
-        return by;
-    }
+    public LocalDate getDate() { return date; }
+    /** @return the deadline time, or {@code null} when date-only */
+    public LocalTime getTime() { return time; }
 
     /** {@inheritDoc} */
     @Override
     public String[] getStorageDetails() {
-        return new String[] {by};
+        return new String[] {date == null ? "" : date.toString(), time == null ? "" : time.toString()};
     }
 
     /**
@@ -26,9 +30,10 @@ public class Deadline extends Task {
      * @param description the text describing the task
      * @param by the time by which the task must be completed
      */
-    public Deadline(String description, String by) {
+    public Deadline(String description, LocalDate date, LocalTime time) {
         super(description);
-        this.by = by;
+        this.date = date;
+        this.time = time;
     }
 
     /**
@@ -48,6 +53,6 @@ public class Deadline extends Task {
      */
     @Override
     protected String getAdditionalDetails() {
-        return " (by: " + by + ")";
+        return " (by: " + (date == null ? time : time == null ? date : date + " " + time) + ")";
     }
 }

@@ -1,5 +1,7 @@
-package commands;
+package commands.task;
 
+import commands.TaskCommand;
+import commands.tokens.DateTimeToken;
 import tasks.Deadline;
 import session.Session;
 
@@ -21,16 +23,17 @@ public class DeadlineCommand extends TaskCommand {
     /** {@inheritDoc} */
     @Override public void execute() {
         String[] parts = details();
-        addTask(new Deadline(parts[0].trim(), parts[1].trim()));
+        DateTimeToken token = token(parts[1]);
+        addTask(new Deadline(parts[0].trim(), token.date(), token.time()));
     }
     /** {@inheritDoc} */
     @Override public boolean check() {
         String[] parts = details();
-        return parts.length == 2 && !parts[0].isBlank() && !parts[1].isBlank();
+        return parts.length == 2 && !parts[0].isBlank() && token(parts[1]).check();
     }
     /** {@inheritDoc} */
     @Override public String hint() {
-        return " Use '" + COMMAND + " DESCRIPTION " + REQUIRED_TOKENS[0] + " WHEN'.";
+        return token("").hint();
     }
 
     /**
@@ -41,4 +44,6 @@ public class DeadlineCommand extends TaskCommand {
     private String[] details() {
         return input.substring(COMMAND.length()).trim().split(" " + REQUIRED_TOKENS[0] + " ", 2);
     }
+
+    private DateTimeToken token(String value) { return new DateTimeToken(REQUIRED_TOKENS[0], value); }
 }
