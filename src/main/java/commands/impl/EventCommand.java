@@ -9,11 +9,12 @@ import session.Session;
 import java.util.List;
 
 /** Adds a task with a start and end time. */
-public class EventCommand extends TaskCommand {
+public class EventCommand extends TaskCommand implements TokenizedCommand<DateTimeToken> {
     /** The user input that invokes this command. */
     public static final String COMMAND = "event";
     /** Tokens required after the command name. */
-    private static final String[] REQUIRED_TOKENS = {"/from", "/to"};
+    private static final String FROM_TOKEN = "from";
+    private static final String TO_TOKEN = "to";
 
     /**
      * Creates a command that adds an event task.
@@ -25,35 +26,36 @@ public class EventCommand extends TaskCommand {
 
     /** {@inheritDoc} */
     @Override public void execute() {
-        String[] details = details();
-        DateTimeToken from = token("/from", details[1]);
-        DateTimeToken to = token("/to", details[2]);
-        addTask(new Event(details[0], from.date(), from.time(), to.date(), to.time()));
+        Input<DateTimeToken> parsed = splitInput();
+        DateTimeToken from = parsed.tokens().get(0);
+        DateTimeToken to = parsed.tokens().get(1);
+        addTask(new Event(parsed.description(), from.date(), from.time(), to.date(), to.time()));
     }
     /** {@inheritDoc} */
     @Override public boolean check() {
-        String[] details = details();
-        return details != null && !details[0].isBlank()
-                && token("/from", details[1]).check() && token("/to", details[2]).check();
+        Input<DateTimeToken> parsed = splitInput();
+        return !parsed.description().isBlank() && parsed.tokens().stream().allMatch(Token::check);
     }
     /** {@inheritDoc} */
     @Override public String hint() {
         return " Use '" + COMMAND + " DESCRIPTION "
-                + Token.composeHints(List.of(token("from", ""), token("to", ""))) + "'.";
+                + Token.composeHints(List.of(token(FROM_TOKEN, ""), token(TO_TOKEN, ""))) + "'.";
     }
 
     /**
-     * Splits the description, start time, and end time around the required tokens.
+     * Splits the description, start value, and end value around the required tokens.
      *
-     * @return the description, start time, and end time; {@code null} when a token is missing
+     * @return the description and the ordered {@code from} and {@code to} tokens
      */
-    private String[] details() {
+    @Override public Input<DateTimeToken> splitInput() {
         String[] descriptionAndTimes = input.substring(COMMAND.length()).trim()
-                .split(" " + REQUIRED_TOKENS[0] + " ", 2);
-        if (descriptionAndTimes.length != 2) return null;
-        String[] times = descriptionAndTimes[1].split(" " + REQUIRED_TOKENS[1] + " ", 2);
-        if (times.length != 2) return null;
-        return new String[] {descriptionAndTimes[0].trim(), times[0].trim(), times[1].trim()};
+                .split(" /" + FROM_TOKEN + " ", 2);
+        String values = descriptionAndTimes.length == 2 ? descriptionAndTimes[1] : "";
+        String[] times = values.split(" /" + TO_TOKEN + " ", 2);
+        String from = times.length == 2 ? times[0] : "";
+        String to = times.length == 2 ? times[1] : "";
+        return new Input<>(descriptionAndTimes[0].trim(),
+                List.of(token(FROM_TOKEN, from), token(TO_TOKEN, to)));
     }
 
     private DateTimeToken token(String name, String value) { return new DateTimeToken(name, value); }

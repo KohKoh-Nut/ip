@@ -9,11 +9,11 @@ import session.Session;
 import java.util.List;
 
 /** Adds a task with a deadline. */
-public class DeadlineCommand extends TaskCommand {
+public class DeadlineCommand extends TaskCommand implements TokenizedCommand<DateTimeToken> {
     /** The user input that invokes this command. */
     public static final String COMMAND = "deadline";
     /** Tokens required after the command name. */
-    private static final String[] REQUIRED_TOKENS = {"/by"};
+    private static final String BY_TOKEN = "by";
 
     /**
      * Creates a command that adds a deadline task.
@@ -25,14 +25,14 @@ public class DeadlineCommand extends TaskCommand {
 
     /** {@inheritDoc} */
     @Override public void execute() {
-        String[] parts = details();
-        DateTimeToken token = token(parts[1]);
-        addTask(new Deadline(parts[0].trim(), token.date(), token.time()));
+        Input<DateTimeToken> parsed = splitInput();
+        DateTimeToken by = parsed.tokens().getFirst();
+        addTask(new Deadline(parsed.description(), by.date(), by.time()));
     }
     /** {@inheritDoc} */
     @Override public boolean check() {
-        String[] parts = details();
-        return parts.length == 2 && !parts[0].isBlank() && token(parts[1]).check();
+        Input<DateTimeToken> parsed = splitInput();
+        return !parsed.description().isBlank() && parsed.tokens().stream().allMatch(Token::check);
     }
     /** {@inheritDoc} */
     @Override public String hint() {
@@ -40,13 +40,15 @@ public class DeadlineCommand extends TaskCommand {
     }
 
     /**
-     * Splits the description and deadline details around the required token.
+     * Splits the description and deadline value around {@code /by}.
      *
-     * @return the description and deadline details
+     * @return the description and one named date/time token
      */
-    private String[] details() {
-        return input.substring(COMMAND.length()).trim().split(" " + REQUIRED_TOKENS[0] + " ", 2);
+    @Override public Input<DateTimeToken> splitInput() {
+        String[] parts = input.substring(COMMAND.length()).trim().split(" /" + BY_TOKEN + " ", 2);
+        String value = parts.length == 2 ? parts[1] : "";
+        return new Input<>(parts[0].trim(), List.of(token(value)));
     }
 
-    private DateTimeToken token(String value) { return new DateTimeToken("by", value); }
+    private DateTimeToken token(String value) { return new DateTimeToken(BY_TOKEN, value); }
 }
