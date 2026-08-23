@@ -14,7 +14,16 @@ import tasks.Todo;
 
 /** Reads and writes the task list using a small, escaped text format. */
 public class TaskStorage {
-    /** Loads tasks from a file, treating a missing file as an empty list. */
+    /** Creates a storage helper. */
+    public TaskStorage() {
+    }
+
+    /**
+     * Loads tasks from a file, treating a missing file as an empty list.
+     *
+     * @param path file to read
+     * @return tasks decoded from the file
+     */
     public List<Task> load(Path path) {
         try {
             List<Task> tasks = new ArrayList<>();
@@ -28,7 +37,13 @@ public class TaskStorage {
         }
     }
 
-    /** Saves all tasks, creating the parent directory when necessary. */
+    /**
+     * Saves all tasks, creating the parent directory when necessary.
+     *
+     * @param path file to write
+     * @param taskList tasks to encode
+     * @throws IOException if the file cannot be written
+     */
     public void save(Path path, TaskList taskList) throws IOException {
         if (path.getParent() != null) Files.createDirectories(path.getParent());
         List<String> lines = new ArrayList<>();

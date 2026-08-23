@@ -20,12 +20,21 @@ public class TaskList {
     public TaskList() {
     }
 
-    /** Sets the callback invoked after a task list mutation. */
+    /**
+     * Sets the callback invoked after a task list mutation.
+     *
+     * @param listener callback to invoke, or {@code null} to disable callbacks
+     */
     public void setChangeListener(Runnable listener) {
         changeListener = listener == null ? () -> { } : listener;
     }
 
-    /** Adds a task while restoring persisted state without triggering a save. */
+    /**
+     * Adds a task while restoring persisted state without triggering a save.
+     *
+     * @param task task being restored
+     * @return whether the task was added
+     */
     public boolean addLoaded(Task task) {
         return addInternal(task, false);
     }
@@ -84,7 +93,11 @@ public class TaskList {
         return task;
     }
 
-    /** Returns the number of tasks currently stored. */
+    /**
+     * Returns the number of tasks currently stored.
+     *
+     * @return the number of tasks
+     */
     public int size() {
         return taskCount;
     }

@@ -24,7 +24,11 @@ public class Session {
         this(DEFAULT_DATA_PATH);
     }
 
-    /** Creates a session and loads its tasks from the supplied path. */
+    /**
+     * Creates a session and loads its tasks from the supplied path.
+     *
+     * @param dataPath relative or absolute path containing persisted tasks
+     */
     public Session(Path dataPath) {
         this.dataPath = dataPath;
         taskList = new TaskList();

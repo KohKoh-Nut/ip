@@ -5,7 +5,11 @@ public class Deadline extends Task {
     /** The time by which this task must be completed. */
     private final String by;
 
-    /** Returns the deadline value used when saving this task. */
+    /**
+     * Returns the deadline value used when saving this task.
+     *
+     * @return the deadline value
+     */
     public String getBy() {
         return by;
     }
