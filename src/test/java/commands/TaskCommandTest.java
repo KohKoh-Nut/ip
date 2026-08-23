@@ -19,8 +19,10 @@ public final class TaskCommandTest {
         Path path = Files.createTempDirectory("zabud-command-test").resolve("tasks.txt");
         Session session = new Session(path);
         DeadlineCommand command = new DeadlineCommand("deadline return book /by 2/12/2019 1800", session);
-        assert command.hint().equals(
-                " Use 'deadline DESCRIPTION /by DD/MM/YYYY, HHMM, or DD/MM/YYYY HHMM'.");
+        assert command.hint().equals(" Use 'deadline DESCRIPTION /by DATE_OR_TIME'.\n\n"
+                + " - DESCRIPTION: enter a description containing at least one non-space character.\n"
+                + " - DATE_OR_TIME: enter a date as DD/MM/YYYY, a 24-hour time as HHMM, "
+                + "or both as DD/MM/YYYY HHMM.");
         assert command.check();
         command.execute();
         assert session.getTaskList().get(1) instanceof Deadline;
@@ -30,8 +32,10 @@ public final class TaskCommandTest {
 
         EventCommand event = new EventCommand(
                 "event meeting /from 2/12/2019 1800 /to 2/12/2019 1900", session);
-        assert event.hint().equals(" Use 'event DESCRIPTION /from DD/MM/YYYY, HHMM, or DD/MM/YYYY HHMM "
-                + "/to DD/MM/YYYY, HHMM, or DD/MM/YYYY HHMM'.");
+        assert event.hint().equals(" Use 'event DESCRIPTION /from DATE_OR_TIME /to DATE_OR_TIME'.\n\n"
+                + " - DESCRIPTION: enter a description containing at least one non-space character.\n"
+                + " - DATE_OR_TIME: enter a date as DD/MM/YYYY, a 24-hour time as HHMM, "
+                + "or both as DD/MM/YYYY HHMM.");
         assert event.splitInput().description().equals("meeting");
         assert event.splitInput().tokens().size() == 2;
         assert event.check();

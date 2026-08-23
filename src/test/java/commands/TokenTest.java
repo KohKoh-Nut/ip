@@ -19,6 +19,10 @@ public final class TokenTest {
         assert both.time().equals(LocalTime.of(18, 0));
         assert !new DateTimeToken("by", "31/2/2019 1800").check();
         assert Token.composeHints(List.of(new DateTimeToken("by", "")))
-                .equals("/by DD/MM/YYYY, HHMM, or DD/MM/YYYY HHMM");
+                .equals("/by DATE_OR_TIME");
+        assert Token.composeRequirements(List.of(
+                new DateTimeToken("from", ""), new DateTimeToken("to", "")))
+                .equals(" - DATE_OR_TIME: enter a date as DD/MM/YYYY, a 24-hour time as HHMM, "
+                        + "or both as DD/MM/YYYY HHMM.");
     }
 }
