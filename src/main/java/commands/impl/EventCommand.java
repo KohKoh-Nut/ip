@@ -40,8 +40,9 @@ public class EventCommand extends TaskCommand implements Tokenizable<DateTimeTok
     }
     /** {@inheritDoc} */
     @Override public String hint() {
-        return " Use '" + COMMAND + " DESCRIPTION "
-                + Token.composeHints(List.of(token(FROM_TOKEN, ""), token(TO_TOKEN, ""))) + "'.";
+        List<DateTimeToken> tokens = List.of(token(FROM_TOKEN, ""), token(TO_TOKEN, ""));
+        return formatHint(COMMAND + " " + DESCRIPTION + " " + Token.composeHints(tokens),
+                DESCRIPTION_REQUIREMENT, Token.composeRequirements(tokens));
     }
 
     /**

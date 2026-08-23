@@ -80,6 +80,13 @@ public final class DateTimeToken extends Token {
     /** {@inheritDoc} */
     @Override
     public String hint() {
-        return "DD/MM/YYYY, HHMM, or DD/MM/YYYY HHMM";
+        return "DATE_OR_TIME";
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    protected String requirement() {
+        return "enter a date as DD/MM/YYYY, a 24-hour time as HHMM, "
+                + "or both as DD/MM/YYYY HHMM.";
     }
 }

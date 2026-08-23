@@ -33,7 +33,9 @@ public class MarkCommand extends Command {
                 && REQUIRED_TOKENS.length == 0;
     }
     /** {@inheritDoc} */
-    @Override public String hint() { return " Please specify a valid task number."; }
+    @Override public String hint() {
+        return formatHint(COMMAND + " " + TASK_NUMBER, TASK_NUMBER_REQUIREMENT);
+    }
 
     /**
      * Parses the one-based task number following the command name.

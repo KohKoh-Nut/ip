@@ -24,7 +24,9 @@ public class TodoCommand extends TaskCommand {
     /** {@inheritDoc} */
     @Override public boolean check() { return !description().isEmpty() && REQUIRED_TOKENS.length == 0; }
     /** {@inheritDoc} */
-    @Override public String hint() { return " Please provide a description after '" + COMMAND + "'."; }
+    @Override public String hint() {
+        return formatHint(COMMAND + " " + DESCRIPTION, DESCRIPTION_REQUIREMENT);
+    }
 
     /**
      * Returns the task description following the command name.

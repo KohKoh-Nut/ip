@@ -37,7 +37,9 @@ public class DeadlineCommand extends TaskCommand implements Tokenizable<DateTime
     }
     /** {@inheritDoc} */
     @Override public String hint() {
-        return " Use '" + COMMAND + " DESCRIPTION " + Token.composeHints(List.of(token(""))) + "'.";
+        List<DateTimeToken> tokens = List.of(token(""));
+        return formatHint(COMMAND + " " + DESCRIPTION + " " + Token.composeHints(tokens),
+                DESCRIPTION_REQUIREMENT, Token.composeRequirements(tokens));
     }
 
     /**

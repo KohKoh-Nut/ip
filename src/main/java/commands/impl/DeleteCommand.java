@@ -40,7 +40,7 @@ public class DeleteCommand extends Command {
     /** {@inheritDoc} */
     @Override
     public String hint() {
-        return " Please specify a valid task number.";
+        return formatHint(COMMAND + " " + TASK_NUMBER, TASK_NUMBER_REQUIREMENT);
     }
 
     /**

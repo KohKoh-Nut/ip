@@ -1,5 +1,6 @@
 package commands;
 
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -32,6 +33,28 @@ public abstract class Token implements Validatable {
                 .map(token -> "/" + token.name + " " + token.hint())
                 .collect(Collectors.joining(" "));
     }
+
+    /**
+     * Builds one requirement line for each distinct token value type.
+     * Tokens with the same hint placeholder share one requirement line.
+     *
+     * @param tokens tokens whose value requirements should be described
+     * @return distinct requirement lines separated by newlines
+     */
+    public static String composeRequirements(List<? extends Token> tokens) {
+        LinkedHashMap<String, String> requirements = new LinkedHashMap<>();
+        for (Token token : tokens) requirements.putIfAbsent(token.hint(), token.requirement());
+        return requirements.entrySet().stream()
+                .map(entry -> " - " + entry.getKey() + ": " + entry.getValue())
+                .collect(Collectors.joining("\n"));
+    }
+
+    /**
+     * Returns the requirement for values accepted by this token type.
+     *
+     * @return plain-language value requirement
+     */
+    protected abstract String requirement();
 
     /**
      * Renames this token for command-specific parsing and guidance.
