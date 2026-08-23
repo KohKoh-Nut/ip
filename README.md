@@ -1,6 +1,16 @@
-# Duke project template
+# Zabud
 
-This is a project template for a greenfield Java project. It's named after the Java mascot _Duke_. Given below are instructions on how to use it.
+Zabud is a command-line task assistant written in Java. It supports to-dos, deadlines, events, marking and deleting tasks, and automatically saves the task list between launches.
+
+## Running
+
+Use JDK 25 and run `Zabud` from the project root. Task data is stored at the relative path `./data/zabud.txt`; the directory and file are created automatically after the first task change. A missing or malformed data file is handled as an empty task list.
+
+## Commands
+
+`todo DESCRIPTION`, `deadline DESCRIPTION /by WHEN`, `event DESCRIPTION /from START /to END`, `list`, `mark NUMBER`, `unmark NUMBER`, `delete NUMBER`, `help`, and `bye`.
+
+The remainder of this file contains the original IntelliJ setup guidance.
 
 ## Setting up in Intellij
 

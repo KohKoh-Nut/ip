@@ -8,6 +8,12 @@ public class Event extends Task {
     /** The event end time. */
     private final String to;
 
+    /** {@inheritDoc} */
+    @Override
+    public String[] getStorageDetails() {
+        return new String[] {from, to};
+    }
+
     /**
      * Creates an event task.
      *

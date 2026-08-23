@@ -5,6 +5,17 @@ public class Deadline extends Task {
     /** The time by which this task must be completed. */
     private final String by;
 
+    /** Returns the deadline value used when saving this task. */
+    public String getBy() {
+        return by;
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public String[] getStorageDetails() {
+        return new String[] {by};
+    }
+
     /**
      * Creates a deadline task.
      *

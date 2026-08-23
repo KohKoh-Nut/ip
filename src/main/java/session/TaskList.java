@@ -13,8 +13,21 @@ public class TaskList {
     /** Number of occupied elements in {@link #tasks}. */
     private int taskCount;
 
+    /** Called after a mutation so the owning session can persist the list. */
+    private Runnable changeListener = () -> { };
+
     /** Creates an empty task list. */
     public TaskList() {
+    }
+
+    /** Sets the callback invoked after a task list mutation. */
+    public void setChangeListener(Runnable listener) {
+        changeListener = listener == null ? () -> { } : listener;
+    }
+
+    /** Adds a task while restoring persisted state without triggering a save. */
+    public boolean addLoaded(Task task) {
+        return addInternal(task, false);
     }
 
     /**
@@ -24,10 +37,15 @@ public class TaskList {
      * @return whether the task was added
      */
     public boolean add(Task task) {
+        return addInternal(task, true);
+    }
+
+    private boolean addInternal(Task task, boolean notify) {
         if (taskCount == MAX_TASKS) {
             return false;
         }
         tasks[taskCount++] = task;
+        if (notify) changeListener.run();
         return true;
     }
 
@@ -62,7 +80,13 @@ public class TaskList {
             tasks[i] = tasks[i + 1];
         }
         tasks[--taskCount] = null;
+        changeListener.run();
         return task;
+    }
+
+    /** Returns the number of tasks currently stored. */
+    public int size() {
+        return taskCount;
     }
 
     /** Prints all tasks in their entry order. */
