@@ -9,7 +9,8 @@ public final class SessionHistoryTest {
 
     /** Verifies previous/next navigation, escape-equivalent reset, and the 1000-entry limit. */
     public static void main(String[] args) throws Exception {
-        Session session = new Session(Files.createTempDirectory("zabud-history").resolve("tasks.txt"));
+        Path path = Files.createTempDirectory("zabud-history").resolve("session.txt");
+        Session session = new Session(path);
         session.recordCommand("todo first");
         session.recordCommand("todo second");
         assert session.previousCommand().equals("todo second");
@@ -21,5 +22,10 @@ public final class SessionHistoryTest {
         for (int i = 0; i < Session.COMMAND_HISTORY_LIMIT + 1; i++) session.recordCommand("command " + i);
         for (int i = 0; i < Session.COMMAND_HISTORY_LIMIT - 1; i++) session.previousCommand();
         assert session.previousCommand().equals("command 1");
+
+        Session restored = new Session(path);
+        assert restored.previousCommand().equals("command 1000");
+        for (int i = 0; i < Session.COMMAND_HISTORY_LIMIT - 1; i++) restored.previousCommand();
+        assert restored.previousCommand().equals("command 1");
     }
 }
