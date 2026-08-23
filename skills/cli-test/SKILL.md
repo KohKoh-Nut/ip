@@ -42,6 +42,11 @@ and `event` create tasks. Confirm that an unrecognised command does not change
 the task count, and that list output identifies each task as `[T]`, `[D]`, or
 `[E]` before its completion status.
 
+When a command is added, test its successful result, malformed input, and its
+effect on the task list. For `delete`, confirm later tasks shift forward and an
+invalid number leaves the list unchanged. For `help`, confirm every supported
+command and its required syntax are listed.
+
 ## Scope boundary
 
 This skill does not use browser automation and does not assess DOM accessibility, responsive layout, or web visual design. For browser-rendered applications, use a browser UI-testing skill instead.

@@ -44,6 +44,27 @@ public class TaskList {
         return tasks[taskNumber - 1];
     }
 
+    /**
+     * Removes and returns the task at a one-based number.
+     * Tasks after the removed task are shifted forward to preserve their order.
+     *
+     * @param taskNumber the one-based task number
+     * @return the removed task, or {@code null} if the number is invalid
+     */
+    public Task remove(int taskNumber) {
+        Task task = get(taskNumber);
+        if (task == null) {
+            return null;
+        }
+
+        int taskIndex = taskNumber - 1;
+        for (int i = taskIndex; i < taskCount - 1; i++) {
+            tasks[i] = tasks[i + 1];
+        }
+        tasks[--taskCount] = null;
+        return task;
+    }
+
     /** Prints all tasks in their entry order. */
     public void printTasks() {
         System.out.println(" Here are the tasks in your list:");

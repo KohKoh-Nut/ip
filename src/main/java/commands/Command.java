@@ -74,11 +74,15 @@ public abstract class Command {
     private static Command createCommand(String input, Session session) {
         if (input.equals(ByeCommand.COMMAND)) return new ByeCommand(input, session);
         if (input.equals(ListCommand.COMMAND)) return new ListCommand(input, session);
+        if (input.equals(HelpCommand.COMMAND)) return new HelpCommand(input, session);
         if (input.equals(MarkCommand.COMMAND) || input.startsWith(MarkCommand.COMMAND + " ")) {
             return new MarkCommand(input, session);
         }
         if (input.equals(UnmarkCommand.COMMAND) || input.startsWith(UnmarkCommand.COMMAND + " ")) {
             return new UnmarkCommand(input, session);
+        }
+        if (input.equals(DeleteCommand.COMMAND) || input.startsWith(DeleteCommand.COMMAND + " ")) {
+            return new DeleteCommand(input, session);
         }
         if (input.equals(TodoCommand.COMMAND) || input.startsWith(TodoCommand.COMMAND + " ")) {
             return new TodoCommand(input, session);
