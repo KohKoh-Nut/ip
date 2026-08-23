@@ -1,5 +1,6 @@
-package commands;
+package commands.impl;
 
+import commands.Command;
 import session.Session;
 
 /** Handles input that does not match a supported command. */
@@ -24,5 +25,5 @@ public class UnknownCommand extends Command {
     /** {@inheritDoc} */
     @Override public boolean check() { return REQUIRED_TOKENS.length != 0; }
     /** {@inheritDoc} */
-    @Override public String hint() { return " Please use todo, deadline, or event to add a task."; }
+    @Override public String hint() { return " Unknown command. Use 'help' to see available commands."; }
 }

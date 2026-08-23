@@ -1,30 +1,65 @@
 package tasks;
 
+import java.time.LocalDate;
+import java.time.LocalTime;
+
 /** Represents a task that occurs between a start and end time. */
 public class Event extends Task {
-    /** The event start time. */
-    private final String from;
+    /** Event start date, or {@code null} when the start is time-only. */
+    private final LocalDate fromDate;
+    /** Event start time, or {@code null} when the start is date-only. */
+    private final LocalTime fromTime;
 
-    /** The event end time. */
-    private final String to;
+    /** Event end date, or {@code null} when the end is time-only. */
+    private final LocalDate toDate;
+    /** Event end time, or {@code null} when the end is date-only. */
+    private final LocalTime toTime;
 
     /** {@inheritDoc} */
     @Override
     public String[] getStorageDetails() {
-        return new String[] {from, to};
+        return new String[] {text(fromDate), text(fromTime), text(toDate), text(toTime)};
     }
+
+    /**
+     * Returns the event start date.
+     *
+     * @return event start date, or {@code null} when absent
+     */
+    public LocalDate getFromDate() { return fromDate; }
+    /**
+     * Returns the event start time.
+     *
+     * @return event start time, or {@code null} when absent
+     */
+    public LocalTime getFromTime() { return fromTime; }
+
+    /**
+     * Returns the event end date.
+     *
+     * @return event end date, or {@code null} when absent
+     */
+    public LocalDate getToDate() { return toDate; }
+    /**
+     * Returns the event end time.
+     *
+     * @return event end time, or {@code null} when absent
+     */
+    public LocalTime getToTime() { return toTime; }
 
     /**
      * Creates an event task.
      *
      * @param description the text describing the event
-     * @param from the event start time
-     * @param to the event end time
+     * @param fromDate event start date, or {@code null} when absent
+     * @param fromTime event start time, or {@code null} when absent
+     * @param toDate event end date, or {@code null} when absent
+     * @param toTime event end time, or {@code null} when absent
      */
-    public Event(String description, String from, String to) {
+    public Event(String description, LocalDate fromDate, LocalTime fromTime, LocalDate toDate, LocalTime toTime) {
         super(description);
-        this.from = from;
-        this.to = to;
+        this.fromDate = fromDate; this.fromTime = fromTime;
+        this.toDate = toDate; this.toTime = toTime;
     }
 
     /**
@@ -44,6 +79,11 @@ public class Event extends Task {
      */
     @Override
     protected String getAdditionalDetails() {
-        return " (from: " + from + " to: " + to + ")";
+        return " (from: " + combined(fromDate, fromTime) + " to: " + combined(toDate, toTime) + ")";
+    }
+
+    private static String text(Object value) { return value == null ? "" : value.toString(); }
+    private static String combined(LocalDate date, LocalTime time) {
+        return date == null ? text(time) : time == null ? text(date) : date + " " + time;
     }
 }

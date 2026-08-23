@@ -1,34 +1,50 @@
 package tasks;
 
+import java.time.LocalDate;
+import java.time.LocalTime;
+
 /** Represents a task that must be completed by a specified time. */
 public class Deadline extends Task {
-    /** The time by which this task must be completed. */
-    private final String by;
+    /** Deadline date, or {@code null} for a time-only deadline. */
+    private final LocalDate date;
+    /** Deadline time, or {@code null} for a date-only deadline. */
+    private final LocalTime time;
 
     /**
-     * Returns the deadline value used when saving this task.
+     * Returns the deadline date.
      *
-     * @return the deadline value
+     * @return deadline date, or {@code null} for a time-only deadline
      */
-    public String getBy() {
-        return by;
+    public LocalDate getDate() {
+        return date;
+    }
+
+    /**
+     * Returns the deadline time.
+     *
+     * @return deadline time, or {@code null} for a date-only deadline
+     */
+    public LocalTime getTime() {
+        return time;
     }
 
     /** {@inheritDoc} */
     @Override
     public String[] getStorageDetails() {
-        return new String[] {by};
+        return new String[] {date == null ? "" : date.toString(), time == null ? "" : time.toString()};
     }
 
     /**
      * Creates a deadline task.
      *
      * @param description the text describing the task
-     * @param by the time by which the task must be completed
+     * @param date deadline date, or {@code null} for a time-only deadline
+     * @param time deadline time, or {@code null} for a date-only deadline
      */
-    public Deadline(String description, String by) {
+    public Deadline(String description, LocalDate date, LocalTime time) {
         super(description);
-        this.by = by;
+        this.date = date;
+        this.time = time;
     }
 
     /**
@@ -48,6 +64,6 @@ public class Deadline extends Task {
      */
     @Override
     protected String getAdditionalDetails() {
-        return " (by: " + by + ")";
+        return " (by: " + (date == null ? time : time == null ? date : date + " " + time) + ")";
     }
 }

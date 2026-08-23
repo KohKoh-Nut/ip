@@ -1,9 +1,29 @@
 package commands;
 
+import commands.impl.ByeCommand;
+import commands.impl.DeadlineCommand;
+import commands.impl.DeleteCommand;
+import commands.impl.EventCommand;
+import commands.impl.HelpCommand;
+import commands.impl.ListCommand;
+import commands.impl.MarkCommand;
+import commands.impl.TodoCommand;
+import commands.impl.UnknownCommand;
+import commands.impl.UnmarkCommand;
 import session.Session;
 
 /** Defines a command that can validate and act on one line of user input. */
-public abstract class Command {
+public abstract class Command implements Validatable {
+    /** Placeholder used for a required task description. */
+    protected static final String DESCRIPTION = "DESCRIPTION";
+    /** Placeholder used for a required one-based task number. */
+    protected static final String TASK_NUMBER = "TASK_NUMBER";
+    /** Requirement shown for task descriptions. */
+    protected static final String DESCRIPTION_REQUIREMENT =
+            " - DESCRIPTION: enter a description containing at least one non-space character.";
+    /** Requirement shown for task numbers. */
+    protected static final String TASK_NUMBER_REQUIREMENT =
+            " - TASK_NUMBER: enter the number of an existing task.";
     /** The complete line entered by the user. */
     protected final String input;
 
@@ -19,6 +39,17 @@ public abstract class Command {
     protected Command(String input, Session session) {
         this.input = input;
         this.session = session;
+    }
+
+    /**
+     * Formats a complete invalid-input hint from syntax and requirement lines.
+     *
+     * @param syntax command syntax containing named placeholders
+     * @param requirements requirement lines for those placeholders
+     * @return formatted command hint
+     */
+    protected static String formatHint(String syntax, String... requirements) {
+        return " Use '" + syntax + "'.\n\n" + String.join("\n", requirements);
     }
 
     /** Executes this command's effect. */

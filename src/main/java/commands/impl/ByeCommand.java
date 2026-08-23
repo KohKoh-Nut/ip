@@ -1,5 +1,6 @@
-package commands;
+package commands.impl;
 
+import commands.Command;
 import session.Session;
 
 /** Ends the current Zabud session. */
