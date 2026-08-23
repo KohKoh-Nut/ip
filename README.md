@@ -31,6 +31,21 @@ java -cp out Zabud
 
 Enter `help` at any time to display the available commands and input requirements.
 
+## Test
+
+Compile the application and regression tests for Java 25, then run every test with assertions enabled:
+
+```bash
+mkdir -p out
+javac --release 25 -d out $(find src/main/java src/test/java -name '*.java')
+java -ea -cp out commands.ParserTest
+java -ea -cp out commands.TokenTest
+java -ea -cp out commands.TaskCommandTest
+java -ea -cp out commands.CommandHintTest
+java -ea -cp out session.SessionHistoryTest
+java -ea -cp out session.SessionStorageTest
+```
+
 ## Commands
 
 | Command | Description |
@@ -65,6 +80,29 @@ Examples:
 deadline return book /by 2/12/2019 1800
 event project meeting /from 3/12/2019 1400 /to 3/12/2019 1600
 ```
+
+## Command parsing
+
+`Parser` converts each input line into an ordered list of immutable `ParsedToken` values. The first
+word is stored as `command`, text before the first slash-prefixed token is stored as `default`, and
+each `/name` introduces another named value. For example:
+
+```text
+deadline test /by 1200
+```
+
+is parsed as:
+
+```text
+(command, deadline), (default, test), (by, 1200)
+```
+
+Every type in `commands.impl` implements `Validatable` and `Buildable`. The parser uses the
+`command` value to select the corresponding command handler, then removes the command entry. It
+calls `check()` on that handler before construction. Valid input is passed to `build()` and the
+returned command is executed; invalid input prints the same handler's `hint()` without calling
+`build()`. Plain values such as `default` are handled directly, while typed values such as `/by`,
+`/from`, and `/to` are checked by `DateTimeToken`.
 
 ## Command history
 

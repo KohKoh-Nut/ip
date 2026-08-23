@@ -1,37 +1,47 @@
 package commands.impl;
 
+import java.util.List;
+
+import commands.Buildable;
+import commands.Command;
+import commands.ParsedToken;
+import commands.Parser;
 import commands.TaskCommand;
+import commands.Validatable;
 import session.Session;
 import tasks.Todo;
 
-/** Adds a to-do task. */
-public class TodoCommand extends TaskCommand {
-    /** The user input that invokes this command. */
+/** Validates and builds commands that add to-do tasks. */
+public final class TodoCommand implements Validatable, Buildable {
+    /** The user input that selects this command type. */
     public static final String COMMAND = "todo";
-    /** Tokens required after the command name. */
-    private static final String[] REQUIRED_TOKENS = {};
 
-    /**
-     * Creates a command that adds a to-do task.
-     *
-     * @param input the complete line entered by the user
-     * @param session the current session
-     */
-    public TodoCommand(String input, Session session) { super(input, session); }
-
-    /** {@inheritDoc} */
-    @Override public void execute() { addTask(new Todo(description())); }
-    /** {@inheritDoc} */
-    @Override public boolean check() { return !description().isEmpty() && REQUIRED_TOKENS.length == 0; }
-    /** {@inheritDoc} */
-    @Override public String hint() {
-        return formatHint(COMMAND + " " + DESCRIPTION, DESCRIPTION_REQUIREMENT);
+    /** Creates a to-do command handler. */
+    public TodoCommand() {
     }
 
-    /**
-     * Returns the task description following the command name.
-     *
-     * @return the trimmed task description
-     */
-    private String description() { return input.substring(COMMAND.length()).trim(); }
+    /** {@inheritDoc} */
+    @Override
+    public boolean check(List<ParsedToken> tokens, Session session) {
+        return Validatable.hasTokenNames(tokens, Parser.DEFAULT_TOKEN)
+                && !tokens.getFirst().value().isBlank();
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public String hint() {
+        return Validatable.formatHint(COMMAND + " " + DESCRIPTION, DESCRIPTION_REQUIREMENT);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public Command build(List<ParsedToken> tokens, Session session) {
+        String description = tokens.getFirst().value();
+        return new TaskCommand(session) {
+            @Override
+            public void execute() {
+                addTask(new Todo(description));
+            }
+        };
+    }
 }

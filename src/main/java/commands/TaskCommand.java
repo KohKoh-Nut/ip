@@ -8,11 +8,10 @@ public abstract class TaskCommand extends Command {
     /**
      * Creates a command that adds a task.
      *
-     * @param input the complete line entered by the user
      * @param session the current session
      */
-    protected TaskCommand(String input, Session session) {
-        super(input, session);
+    protected TaskCommand(Session session) {
+        super(session);
     }
 
     /**

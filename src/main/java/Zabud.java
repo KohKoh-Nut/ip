@@ -3,7 +3,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
 
-import commands.Command;
+import commands.Parser;
 import session.Session;
 
 /** Runs Zabud, a command-line assistant that stores tasks for the current session. */
@@ -34,7 +34,7 @@ public class Zabud {
             String line;
             while ((line = reader.readLine()) != null) {
                 session.recordCommand(line);
-                if (!Command.invoke(line, session)) break;
+                if (!Parser.invoke(line, session)) break;
             }
         } catch (IOException exception) {
             System.out.println(" I could not read input: " + exception.getMessage());
@@ -54,7 +54,7 @@ public class Zabud {
                     String line = current.toString();
                     System.out.print("\n" + SEPARATOR + "\n");
                     session.recordCommand(line);
-                    if (!Command.invoke(line, session)) break;
+                    if (!Parser.invoke(line, session)) break;
                     current.setLength(0);
                     System.out.print("> ");
                 } else if (character == 27) {
@@ -73,7 +73,6 @@ public class Zabud {
 
     /** Interprets arrow-key history navigation or clears the line for a bare escape. */
     private static void handleEscape(Reader reader, StringBuilder current, Session session) throws IOException {
-        reader.ready();
         if (!reader.ready()) {
             current.setLength(0);
             session.resetHistoryNavigation();

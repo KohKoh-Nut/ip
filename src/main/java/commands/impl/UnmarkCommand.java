@@ -1,52 +1,48 @@
 package commands.impl;
 
+import java.util.List;
+
+import commands.Buildable;
 import commands.Command;
+import commands.ParsedToken;
+import commands.Validatable;
 import session.Session;
 import tasks.Task;
 
-/** Marks a task as not done. */
-public class UnmarkCommand extends Command {
-    /** The user input that invokes this command. */
+/** Validates and builds commands that mark tasks as not done. */
+public final class UnmarkCommand implements Validatable, Buildable {
+    /** The user input that selects this command type. */
     public static final String COMMAND = "unmark";
-    /** Tokens required after the command name. */
-    private static final String[] REQUIRED_TOKENS = {};
 
-    /**
-     * Creates a command that marks a task as not done.
-     *
-     * @param input the complete line entered by the user
-     * @param session the current session
-     */
-    public UnmarkCommand(String input, Session session) { super(input, session); }
-
-    /** {@inheritDoc} */
-    @Override public void execute() {
-        Task task = session.getTaskList().get(taskNumber());
-        task.markAsNotDone();
-        session.save();
-        System.out.println(" OK, I've marked this task as not done yet:");
-        System.out.println("   " + task);
-    }
-    /** {@inheritDoc} */
-    @Override public boolean check() {
-        return taskNumber() > 0 && session.getTaskList().get(taskNumber()) != null
-                && REQUIRED_TOKENS.length == 0;
-    }
-    /** {@inheritDoc} */
-    @Override public String hint() {
-        return formatHint(COMMAND + " " + TASK_NUMBER, TASK_NUMBER_REQUIREMENT);
+    /** Creates an unmark command handler. */
+    public UnmarkCommand() {
     }
 
-    /**
-     * Parses the one-based task number following the command name.
-     *
-     * @return the task number, or {@code -1} if the input is not a number
-     */
-    private int taskNumber() {
-        try {
-            return Integer.parseInt(input.substring(COMMAND.length()).trim());
-        } catch (NumberFormatException exception) {
-            return -1;
-        }
+    /** {@inheritDoc} */
+    @Override
+    public boolean check(List<ParsedToken> tokens, Session session) {
+        return Validatable.hasExistingTaskNumber(tokens, session);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public String hint() {
+        return Validatable.formatHint(COMMAND + " " + TASK_NUMBER, TASK_NUMBER_REQUIREMENT);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public Command build(List<ParsedToken> tokens, Session session) {
+        int taskNumber = Validatable.taskNumber(tokens);
+        return new Command(session) {
+            @Override
+            public void execute() {
+                Task task = session.getTaskList().get(taskNumber);
+                task.markAsNotDone();
+                session.save();
+                System.out.println(" OK, I've marked this task as not done yet:");
+                System.out.println("   " + task);
+            }
+        };
     }
 }

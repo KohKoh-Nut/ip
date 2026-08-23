@@ -1,29 +1,34 @@
 package commands.impl;
 
+import java.util.List;
+
+import commands.Buildable;
 import commands.Command;
+import commands.ParsedToken;
+import commands.Validatable;
 import session.Session;
 
-/** Handles input that does not match a supported command. */
-public class UnknownCommand extends Command {
-    /** The input marker for an otherwise unsupported command. */
-    public static final String COMMAND = "";
-    /** Tokens required after the command name. */
-    private static final String[] REQUIRED_TOKENS = {};
-
-    /**
-     * Creates a command that displays guidance for unsupported input.
-     *
-     * @param input the complete line entered by the user
-     * @param session the current session
-     */
-    public UnknownCommand(String input, Session session) { super(input, session); }
-
-    /** {@inheritDoc} */
-    @Override public void execute() {
-        // This command never executes because its input is always invalid.
+/** Validates and builds the fallback for unsupported command names. */
+public final class UnknownCommand implements Validatable, Buildable {
+    /** Creates an unknown-command handler. */
+    public UnknownCommand() {
     }
+
     /** {@inheritDoc} */
-    @Override public boolean check() { return REQUIRED_TOKENS.length != 0; }
+    @Override
+    public boolean check(List<ParsedToken> tokens, Session session) {
+        return false;
+    }
+
     /** {@inheritDoc} */
-    @Override public String hint() { return " Unknown command. Use 'help' to see available commands."; }
+    @Override
+    public String hint() {
+        return " Unknown command. Use 'help' to see available commands.";
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public Command build(List<ParsedToken> tokens, Session session) {
+        throw new IllegalStateException("Unsupported commands cannot be built");
+    }
 }

@@ -1,27 +1,44 @@
 package commands.impl;
 
+import java.util.List;
+
+import commands.Buildable;
 import commands.Command;
+import commands.ParsedToken;
+import commands.Parser;
+import commands.Validatable;
 import session.Session;
 
-/** Displays all tasks in the current session. */
-public class ListCommand extends Command {
-    /** The user input that invokes this command. */
+/** Validates and builds commands that display all tasks. */
+public final class ListCommand implements Validatable, Buildable {
+    /** The user input that selects this command type. */
     public static final String COMMAND = "list";
-    /** Tokens required after the command name. */
-    private static final String[] REQUIRED_TOKENS = {};
 
-    /**
-     * Creates a command that displays all tasks.
-     *
-     * @param input the complete line entered by the user
-     * @param session the current session
-     */
-    public ListCommand(String input, Session session) { super(input, session); }
+    /** Creates a list command handler. */
+    public ListCommand() {
+    }
 
     /** {@inheritDoc} */
-    @Override public void execute() { session.getTaskList().printTasks(); }
+    @Override
+    public boolean check(List<ParsedToken> tokens, Session session) {
+        return Validatable.hasTokenNames(tokens, Parser.DEFAULT_TOKEN)
+                && tokens.getFirst().value().isBlank();
+    }
+
     /** {@inheritDoc} */
-    @Override public boolean check() { return REQUIRED_TOKENS.length == 0; }
+    @Override
+    public String hint() {
+        return " Use 'list'.";
+    }
+
     /** {@inheritDoc} */
-    @Override public String hint() { return ""; }
+    @Override
+    public Command build(List<ParsedToken> tokens, Session session) {
+        return new Command(session) {
+            @Override
+            public void execute() {
+                session.getTaskList().printTasks();
+            }
+        };
+    }
 }
