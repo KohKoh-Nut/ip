@@ -10,7 +10,12 @@ public abstract class Token implements Validatable {
     /** Raw value supplied after the token. */
     protected final String value;
 
-    /** Creates a token with a name and raw value. */
+    /**
+     * Creates a token with a name and raw value.
+     *
+     * @param name token name, with or without a leading slash
+     * @param value raw value following the token name
+     */
     protected Token(String name, String value) {
         this.name = name.startsWith("/") ? name.substring(1) : name;
         this.value = value.trim();
@@ -28,7 +33,12 @@ public abstract class Token implements Validatable {
                 .collect(Collectors.joining(" "));
     }
 
-    /** Renames this token for a command-specific hint. @param name the new name @return this token */
+    /**
+     * Renames this token for command-specific parsing and guidance.
+     *
+     * @param name new token name, with or without a leading slash
+     * @return this token
+     */
     public Token rename(String name) {
         this.name = name.startsWith("/") ? name.substring(1) : name;
         return this;

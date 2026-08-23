@@ -1,4 +1,6 @@
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.Reader;
 
 import commands.Command;
@@ -28,7 +30,7 @@ public class Zabud {
 
     /** Processes line-oriented input used by tests, pipes, and redirected input. */
     private static void runPipedInput(Session session) {
-        try (java.io.BufferedReader reader = new java.io.BufferedReader(new java.io.InputStreamReader(System.in))) {
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(System.in))) {
             String line;
             while ((line = reader.readLine()) != null) {
                 session.recordCommand(line);
@@ -43,7 +45,7 @@ public class Zabud {
     private static void runInteractiveInput(Session session) {
         setTerminalMode(false);
         try {
-            Reader reader = new java.io.InputStreamReader(System.in);
+            Reader reader = new InputStreamReader(System.in);
             StringBuilder current = new StringBuilder();
             System.out.print("> ");
             int character;

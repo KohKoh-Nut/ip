@@ -5,12 +5,14 @@ import java.time.LocalTime;
 
 /** Represents a task that occurs between a start and end time. */
 public class Event extends Task {
-    /** The event start time. */
+    /** Event start date, or {@code null} when the start is time-only. */
     private final LocalDate fromDate;
+    /** Event start time, or {@code null} when the start is date-only. */
     private final LocalTime fromTime;
 
-    /** The event end time. */
+    /** Event end date, or {@code null} when the end is time-only. */
     private final LocalDate toDate;
+    /** Event end time, or {@code null} when the end is date-only. */
     private final LocalTime toTime;
 
     /** {@inheritDoc} */
@@ -19,22 +21,24 @@ public class Event extends Task {
         return new String[] {text(fromDate), text(fromTime), text(toDate), text(toTime)};
     }
 
-    /** @return the event start date or time */
+    /** @return event start date, or {@code null} when absent */
     public LocalDate getFromDate() { return fromDate; }
-    /** @return the event start time */
+    /** @return event start time, or {@code null} when absent */
     public LocalTime getFromTime() { return fromTime; }
 
-    /** @return the event end date or time */
+    /** @return event end date, or {@code null} when absent */
     public LocalDate getToDate() { return toDate; }
-    /** @return the event end time */
+    /** @return event end time, or {@code null} when absent */
     public LocalTime getToTime() { return toTime; }
 
     /**
      * Creates an event task.
      *
      * @param description the text describing the event
-     * @param from the event start time
-     * @param to the event end time
+     * @param fromDate event start date, or {@code null} when absent
+     * @param fromTime event start time, or {@code null} when absent
+     * @param toDate event end date, or {@code null} when absent
+     * @param toTime event end time, or {@code null} when absent
      */
     public Event(String description, LocalDate fromDate, LocalTime fromTime, LocalDate toDate, LocalTime toTime) {
         super(description);

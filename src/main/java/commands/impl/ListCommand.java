@@ -1,7 +1,6 @@
 package commands.impl;
 
-import commands.*;
-
+import commands.Command;
 import session.Session;
 
 /** Displays all tasks in the current session. */

@@ -1,15 +1,16 @@
 package commands.impl;
 
-import commands.*;
-
-import commands.TaskCommand;
-import commands.tokens.DateTimeToken;
-import tasks.Deadline;
-import session.Session;
 import java.util.List;
 
+import commands.TaskCommand;
+import commands.Token;
+import commands.Tokenizable;
+import commands.tokens.DateTimeToken;
+import session.Session;
+import tasks.Deadline;
+
 /** Adds a task with a deadline. */
-public class DeadlineCommand extends TaskCommand implements TokenizedCommand<DateTimeToken> {
+public class DeadlineCommand extends TaskCommand implements Tokenizable<DateTimeToken> {
     /** The user input that invokes this command. */
     public static final String COMMAND = "deadline";
     /** Tokens required after the command name. */
@@ -50,5 +51,13 @@ public class DeadlineCommand extends TaskCommand implements TokenizedCommand<Dat
         return new Input<>(parts[0].trim(), List.of(token(value)));
     }
 
-    private DateTimeToken token(String value) { return new DateTimeToken(BY_TOKEN, value); }
+    /**
+     * Creates the command's named deadline token.
+     *
+     * @param value raw value following {@code /by}
+     * @return date/time token named {@code by}
+     */
+    private DateTimeToken token(String value) {
+        return new DateTimeToken(BY_TOKEN, value);
+    }
 }

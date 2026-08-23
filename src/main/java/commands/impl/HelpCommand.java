@@ -1,7 +1,6 @@
 package commands.impl;
 
-import commands.*;
-
+import commands.Command;
 import session.Session;
 
 /** Displays the commands available in Zabud. */
@@ -27,8 +26,8 @@ public class HelpCommand extends Command {
     public void execute() {
         System.out.println(" Available commands:");
         System.out.println("   todo DESCRIPTION");
-        System.out.println("   deadline DESCRIPTION /by WHEN");
-        System.out.println("   event DESCRIPTION /from START /to END");
+        System.out.println("   deadline DESCRIPTION /by DD/MM/YYYY, HHMM, or DD/MM/YYYY HHMM");
+        System.out.println("   event DESCRIPTION /from DATE_OR_TIME /to DATE_OR_TIME");
         System.out.println("   list");
         System.out.println("   mark TASK_NUMBER");
         System.out.println("   unmark TASK_NUMBER");

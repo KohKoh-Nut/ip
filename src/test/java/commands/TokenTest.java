@@ -1,10 +1,10 @@
 package commands;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.LocalTime;
-import commands.tokens.DateTimeToken;
 import java.util.List;
+
+import commands.tokens.DateTimeToken;
 
 /** Regression checks for command token temporal parsing. */
 public final class TokenTest {
@@ -18,6 +18,7 @@ public final class TokenTest {
         assert both.date().equals(LocalDate.of(2019, 12, 2));
         assert both.time().equals(LocalTime.of(18, 0));
         assert !new DateTimeToken("by", "31/2/2019 1800").check();
-        assert Token.composeHints(List.of(new DateTimeToken("by", ""))).equals("/by xxxxxx");
+        assert Token.composeHints(List.of(new DateTimeToken("by", "")))
+                .equals("/by DD/MM/YYYY, HHMM, or DD/MM/YYYY HHMM");
     }
 }

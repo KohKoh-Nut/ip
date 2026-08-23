@@ -2,8 +2,12 @@ package commands;
 
 import java.util.List;
 
-/** Defines how a command separates its description from its typed token values. */
-public interface TokenizedCommand<T extends Token> {
+/**
+ * Defines input parsing for a command that contains named, typed tokens.
+ *
+ * @param <T> token type produced while parsing the command
+ */
+public interface Tokenizable<T extends Token> {
     /**
      * Splits the command input into its task description and ordered tokens.
      *
@@ -11,7 +15,13 @@ public interface TokenizedCommand<T extends Token> {
      */
     Input<T> splitInput();
 
-    /** Immutable result produced when a tokenized command splits its input. */
+    /**
+     * Immutable result produced when a tokenizable command splits its input.
+     *
+     * @param <T> token type stored in the result
+     * @param description text describing the task
+     * @param tokens parsed tokens in command syntax order
+     */
     record Input<T extends Token>(String description, List<T> tokens) {
         /** Copies the token list so parsed command input cannot be modified later. */
         public Input {

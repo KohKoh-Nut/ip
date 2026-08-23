@@ -1,19 +1,21 @@
 package commands.impl;
 
-import commands.*;
-
-import commands.TaskCommand;
-import commands.tokens.DateTimeToken;
-import tasks.Event;
-import session.Session;
 import java.util.List;
 
+import commands.TaskCommand;
+import commands.Token;
+import commands.Tokenizable;
+import commands.tokens.DateTimeToken;
+import session.Session;
+import tasks.Event;
+
 /** Adds a task with a start and end time. */
-public class EventCommand extends TaskCommand implements TokenizedCommand<DateTimeToken> {
+public class EventCommand extends TaskCommand implements Tokenizable<DateTimeToken> {
     /** The user input that invokes this command. */
     public static final String COMMAND = "event";
-    /** Tokens required after the command name. */
+    /** Name of the token introducing the event start. */
     private static final String FROM_TOKEN = "from";
+    /** Name of the token introducing the event end. */
     private static final String TO_TOKEN = "to";
 
     /**
@@ -58,5 +60,14 @@ public class EventCommand extends TaskCommand implements TokenizedCommand<DateTi
                 List.of(token(FROM_TOKEN, from), token(TO_TOKEN, to)));
     }
 
-    private DateTimeToken token(String name, String value) { return new DateTimeToken(name, value); }
+    /**
+     * Creates one of this command's named date/time tokens.
+     *
+     * @param name token name
+     * @param value raw value following the token
+     * @return date/time token for the supplied event boundary
+     */
+    private DateTimeToken token(String name, String value) {
+        return new DateTimeToken(name, value);
+    }
 }
