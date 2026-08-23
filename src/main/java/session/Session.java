@@ -3,12 +3,16 @@ package session;
 import java.io.IOException;
 import java.nio.file.Path;
 import tasks.Task;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Stores all mutable information that belongs to one running Zabud session.
  * Future session-level state, such as storage settings, can be added here.
  */
 public class Session {
+    /** Maximum number of commands retained for interactive recall. */
+    public static final int COMMAND_HISTORY_LIMIT = 1000;
     /** Relative path used for persistent task data. */
     public static final Path DEFAULT_DATA_PATH = Path.of("data", "zabud.txt");
     /** The task list managed during this session. */
@@ -18,6 +22,8 @@ public class Session {
     private final Path dataPath;
 
     private final TaskStorage storage = new TaskStorage();
+    private final List<String> commandHistory = new ArrayList<>();
+    private int historyCursor;
 
     /** Creates a new session with an empty task list. */
     public Session() {
@@ -43,6 +49,26 @@ public class Session {
      */
     public TaskList getTaskList() {
         return taskList;
+    }
+
+    /** Records a command, retaining only the most recent 1000 entries. */
+    public void recordCommand(String command) {
+        if (command.isBlank()) return;
+        commandHistory.add(command);
+        if (commandHistory.size() > COMMAND_HISTORY_LIMIT) commandHistory.remove(0);
+        historyCursor = commandHistory.size();
+    }
+
+    /** Moves to and returns the previous command, or an empty string at the beginning. */
+    public String previousCommand() {
+        if (historyCursor > 0) historyCursor--;
+        return historyCursor < commandHistory.size() ? commandHistory.get(historyCursor) : "";
+    }
+
+    /** Moves to and returns the next command, or an empty string after the newest command. */
+    public String nextCommand() {
+        if (historyCursor < commandHistory.size()) historyCursor++;
+        return historyCursor < commandHistory.size() ? commandHistory.get(historyCursor) : "";
     }
 
     /** Saves current session data and reports a user-friendly error if it fails. */
