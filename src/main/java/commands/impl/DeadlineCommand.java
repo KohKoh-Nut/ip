@@ -6,6 +6,7 @@ import commands.TaskCommand;
 import commands.tokens.DateTimeToken;
 import tasks.Deadline;
 import session.Session;
+import java.util.List;
 
 /** Adds a task with a deadline. */
 public class DeadlineCommand extends TaskCommand {
@@ -35,7 +36,7 @@ public class DeadlineCommand extends TaskCommand {
     }
     /** {@inheritDoc} */
     @Override public String hint() {
-        return " Use '" + COMMAND + " DESCRIPTION " + REQUIRED_TOKENS[0] + " " + token("").hint() + "'.";
+        return " Use '" + COMMAND + " DESCRIPTION " + Token.composeHints(List.of(token(""))) + "'.";
     }
 
     /**
@@ -47,5 +48,5 @@ public class DeadlineCommand extends TaskCommand {
         return input.substring(COMMAND.length()).trim().split(" " + REQUIRED_TOKENS[0] + " ", 2);
     }
 
-    private DateTimeToken token(String value) { return new DateTimeToken(REQUIRED_TOKENS[0], value); }
+    private DateTimeToken token(String value) { return new DateTimeToken("by", value); }
 }

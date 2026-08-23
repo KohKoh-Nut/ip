@@ -6,9 +6,7 @@ import commands.TaskCommand;
 import commands.tokens.DateTimeToken;
 import tasks.Event;
 import session.Session;
-
-import tasks.Event;
-import session.Session;
+import java.util.List;
 
 /** Adds a task with a start and end time. */
 public class EventCommand extends TaskCommand {
@@ -40,9 +38,8 @@ public class EventCommand extends TaskCommand {
     }
     /** {@inheritDoc} */
     @Override public String hint() {
-        return " Use '" + COMMAND + " DESCRIPTION " + REQUIRED_TOKENS[0] + " "
-                + token("/from", "").hint() + " " + REQUIRED_TOKENS[1] + " "
-                + token("/to", "").hint() + "'.";
+        return " Use '" + COMMAND + " DESCRIPTION "
+                + Token.composeHints(List.of(token("from", ""), token("to", ""))) + "'.";
     }
 
     /**

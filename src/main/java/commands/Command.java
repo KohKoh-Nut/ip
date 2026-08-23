@@ -4,7 +4,7 @@ import session.Session;
 import commands.impl.*;
 
 /** Defines a command that can validate and act on one line of user input. */
-public abstract class Command implements HintCheck {
+public abstract class Command implements Validatable {
     /** The complete line entered by the user. */
     protected final String input;
 
