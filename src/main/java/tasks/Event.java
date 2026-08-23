@@ -21,14 +21,30 @@ public class Event extends Task {
         return new String[] {text(fromDate), text(fromTime), text(toDate), text(toTime)};
     }
 
-    /** @return event start date, or {@code null} when absent */
+    /**
+     * Returns the event start date.
+     *
+     * @return event start date, or {@code null} when absent
+     */
     public LocalDate getFromDate() { return fromDate; }
-    /** @return event start time, or {@code null} when absent */
+    /**
+     * Returns the event start time.
+     *
+     * @return event start time, or {@code null} when absent
+     */
     public LocalTime getFromTime() { return fromTime; }
 
-    /** @return event end date, or {@code null} when absent */
+    /**
+     * Returns the event end date.
+     *
+     * @return event end date, or {@code null} when absent
+     */
     public LocalDate getToDate() { return toDate; }
-    /** @return event end time, or {@code null} when absent */
+    /**
+     * Returns the event end time.
+     *
+     * @return event end time, or {@code null} when absent
+     */
     public LocalTime getToTime() { return toTime; }
 
     /**
