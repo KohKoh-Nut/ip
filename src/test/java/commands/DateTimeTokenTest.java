@@ -13,7 +13,9 @@ import org.junit.jupiter.api.Test;
 
 import commands.tokens.DateTimeToken;
 
-/** Tests valid and invalid temporal command values and their help text. */
+/**
+ * Tests valid and invalid temporal command values and their help text.
+ */
 class DateTimeTokenTest {
     @Test
     void parsesDateTimeAndBothSupportedPartialForms() {

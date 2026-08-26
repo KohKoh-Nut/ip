@@ -13,18 +13,28 @@ import commands.tokens.DateTimeToken;
 import session.Session;
 import tasks.Deadline;
 
-/** Validates and builds commands that add deadline tasks. */
+/**
+ * Validates and builds commands that add deadline tasks.
+ */
 public final class DeadlineCommand implements Validatable, Buildable {
-    /** The user input that selects this command type. */
+    /**
+     * The user input that selects this command type.
+     */
     public static final String COMMAND = "deadline";
-    /** Name of the token introducing the deadline value. */
+    /**
+     * Name of the token introducing the deadline value.
+     */
     private static final String BY_TOKEN = "by";
 
-    /** Creates a deadline command handler. */
+    /**
+     * Creates a deadline command handler.
+     */
     public DeadlineCommand() {
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public boolean check(List<ParsedToken> tokens, Session session) {
         return Validatable.hasTokenNames(tokens, Parser.DEFAULT_TOKEN, BY_TOKEN)
@@ -32,7 +42,9 @@ public final class DeadlineCommand implements Validatable, Buildable {
                 && new DateTimeToken(BY_TOKEN, tokens.get(1).value()).check();
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String hint() {
         List<DateTimeToken> hintTokens = List.of(new DateTimeToken(BY_TOKEN, ""));
@@ -40,7 +52,9 @@ public final class DeadlineCommand implements Validatable, Buildable {
                 DESCRIPTION_REQUIREMENT, Token.composeRequirements(hintTokens));
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Command build(List<ParsedToken> tokens, Session session) {
         String description = tokens.getFirst().value();

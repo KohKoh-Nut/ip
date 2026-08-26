@@ -13,20 +13,32 @@ import commands.tokens.DateTimeToken;
 import session.Session;
 import tasks.Event;
 
-/** Validates and builds commands that add event tasks. */
+/**
+ * Validates and builds commands that add event tasks.
+ */
 public final class EventCommand implements Validatable, Buildable {
-    /** The user input that selects this command type. */
+    /**
+     * The user input that selects this command type.
+     */
     public static final String COMMAND = "event";
-    /** Name of the token introducing the event start. */
+    /**
+     * Name of the token introducing the event start.
+     */
     private static final String FROM_TOKEN = "from";
-    /** Name of the token introducing the event end. */
+    /**
+     * Name of the token introducing the event end.
+     */
     private static final String TO_TOKEN = "to";
 
-    /** Creates an event command handler. */
+    /**
+     * Creates an event command handler.
+     */
     public EventCommand() {
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public boolean check(List<ParsedToken> tokens, Session session) {
         if (!Validatable.hasTokenNames(tokens, Parser.DEFAULT_TOKEN, FROM_TOKEN, TO_TOKEN)
@@ -36,7 +48,9 @@ public final class EventCommand implements Validatable, Buildable {
         return from.check() && to.check();
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String hint() {
         List<DateTimeToken> hintTokens = List.of(
@@ -45,7 +59,9 @@ public final class EventCommand implements Validatable, Buildable {
                 DESCRIPTION_REQUIREMENT, Token.composeRequirements(hintTokens));
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Command build(List<ParsedToken> tokens, Session session) {
         String description = tokens.getFirst().value();

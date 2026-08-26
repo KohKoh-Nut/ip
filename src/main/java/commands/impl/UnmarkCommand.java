@@ -9,28 +9,40 @@ import commands.Validatable;
 import session.Session;
 import tasks.Task;
 
-/** Validates and builds commands that mark tasks as not done. */
+/**
+ * Validates and builds commands that mark tasks as not done.
+ */
 public final class UnmarkCommand implements Validatable, Buildable {
-    /** The user input that selects this command type. */
+    /**
+     * The user input that selects this command type.
+     */
     public static final String COMMAND = "unmark";
 
-    /** Creates an unmark command handler. */
+    /**
+     * Creates an unmark command handler.
+     */
     public UnmarkCommand() {
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public boolean check(List<ParsedToken> tokens, Session session) {
         return Validatable.hasExistingTaskNumber(tokens, session);
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String hint() {
         return Validatable.formatHint(COMMAND + " " + TASK_NUMBER, TASK_NUMBER_REQUIREMENT);
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Command build(List<ParsedToken> tokens, Session session) {
         int taskNumber = Validatable.taskNumber(tokens);

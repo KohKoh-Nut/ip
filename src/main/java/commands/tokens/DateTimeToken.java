@@ -8,23 +8,33 @@ import java.time.format.ResolverStyle;
 
 import commands.Token;
 
-/** Parses a date, time, or date-and-time command value into separate fields. */
+/**
+ * Parses a date, time, or date-and-time command value into separate fields.
+ */
 public final class DateTimeToken extends Token {
-    /** Formatter for user-entered day/month/year dates. */
+    /**
+     * Formatter for user-entered day/month/year dates.
+     */
     private static final DateTimeFormatter DATE = DateTimeFormatter.ofPattern("d/M/uuuu")
             .withResolverStyle(ResolverStyle.STRICT);
-    /** Parsed date, or {@code null} when the value contains only a time. */
+    /**
+     * Parsed date, or {@code null} when the value contains only a time.
+     */
     private LocalDate date;
-    /** Parsed time, or {@code null} when the value contains only a date. */
+    /**
+     * Parsed time, or {@code null} when the value contains only a date.
+     */
     private LocalTime time;
-    /** Whether parsing has already been attempted. */
+    /**
+     * Whether parsing has already been attempted.
+     */
     private boolean parsed;
 
     /**
      * Creates a token that accepts a date, time, or date followed by a time.
      *
-     * @param name token name used in command syntax
-     * @param value raw date/time value
+     * @param name token name used in command syntax.
+     * @param value raw date/time value.
      */
     public DateTimeToken(String name, String value) {
         super(name, value);
@@ -33,7 +43,7 @@ public final class DateTimeToken extends Token {
     /**
      * Returns the parsed date.
      *
-     * @return parsed date, or {@code null} when the value contains no date
+     * @return parsed date, or {@code null} when the value contains no date.
      */
     public LocalDate date() {
         parse();
@@ -43,7 +53,7 @@ public final class DateTimeToken extends Token {
     /**
      * Returns the parsed time.
      *
-     * @return parsed time, or {@code null} when the value contains no time
+     * @return parsed time, or {@code null} when the value contains no time.
      */
     public LocalTime time() {
         parse();
@@ -73,20 +83,26 @@ public final class DateTimeToken extends Token {
         return LocalTime.of(Integer.parseInt(normalized.substring(0, 2)), Integer.parseInt(normalized.substring(2)));
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public boolean check() {
         parse();
         return !value.isBlank() && (date != null || time != null);
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String hint() {
         return "DATE_OR_TIME";
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     protected String requirement() {
         return "enter a date as DD/MM/YYYY, a 24-hour time as HHMM, "

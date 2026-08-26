@@ -12,24 +12,40 @@ import tasks.Task;
  * Future session-level state, such as storage settings, can be added here.
  */
 public final class Session {
-    /** Maximum number of commands retained for interactive recall. */
+    /**
+     * Maximum number of commands retained for interactive recall.
+     */
     public static final int COMMAND_HISTORY_LIMIT = 1000;
-    /** Relative path used for persistent session data. */
+    /**
+     * Relative path used for persistent session data.
+     */
     public static final Path DEFAULT_DATA_PATH = Path.of("data", "zabud.txt");
-    /** The task list managed during this session. */
+    /**
+     * The task list managed during this session.
+     */
     private final TaskList taskList;
 
-    /** File used to persist this session. */
+    /**
+     * File used to persist this session.
+     */
     private final Path dataPath;
 
-    /** Storage helper responsible for the session data file. */
+    /**
+     * Storage helper responsible for the session data file.
+     */
     private final SessionStorage storage = new SessionStorage();
-    /** Commands entered during this and previous sessions, in chronological order. */
+    /**
+     * Commands entered during this and previous sessions, in chronological order.
+     */
     private final List<String> commandHistory = new ArrayList<>();
-    /** Current position used while navigating command history. */
+    /**
+     * Current position used while navigating command history.
+     */
     private int historyCursor;
 
-    /** Creates a session using {@link #DEFAULT_DATA_PATH}. */
+    /**
+     * Creates a session using {@link #DEFAULT_DATA_PATH}.
+     */
     public Session() {
         this(DEFAULT_DATA_PATH);
     }
@@ -37,7 +53,7 @@ public final class Session {
     /**
      * Creates a session and loads its tasks and command history from the supplied path.
      *
-     * @param dataPath relative or absolute path containing persisted session data
+     * @param dataPath relative or absolute path containing persisted session data.
      */
     public Session(Path dataPath) {
         this.dataPath = dataPath;
@@ -53,7 +69,7 @@ public final class Session {
     /**
      * Returns the task list managed by this session.
      *
-     * @return the current session's task list
+     * @return the current session's task list.
      */
     public TaskList getTaskList() {
         return taskList;
@@ -62,7 +78,7 @@ public final class Session {
     /**
      * Records and persists a command, retaining only the most recent 1000 entries.
      *
-     * @param command command entered by the user
+     * @param command command entered by the user.
      */
     public void recordCommand(String command) {
         if (command.isBlank()) return;
@@ -75,7 +91,7 @@ public final class Session {
     /**
      * Moves backward through command history.
      *
-     * @return the previous command, or the oldest command when already at the beginning
+     * @return the previous command, or the oldest command when already at the beginning.
      */
     public String previousCommand() {
         if (historyCursor > 0) historyCursor--;
@@ -85,19 +101,23 @@ public final class Session {
     /**
      * Moves forward through command history.
      *
-     * @return the next command, or an empty string after the newest command
+     * @return the next command, or an empty string after the newest command.
      */
     public String nextCommand() {
         if (historyCursor < commandHistory.size()) historyCursor++;
         return historyCursor < commandHistory.size() ? commandHistory.get(historyCursor) : "";
     }
 
-    /** Resets navigation so the next previous request starts at the newest command. */
+    /**
+     * Resets navigation so the next previous request starts at the newest command.
+     */
     public void resetHistoryNavigation() {
         historyCursor = commandHistory.size();
     }
 
-    /** Saves current session data and reports a user-friendly error if it fails. */
+    /**
+     * Saves current session data and reports a user-friendly error if it fails.
+     */
     public void save() {
         try {
             storage.save(dataPath, taskList, commandHistory);

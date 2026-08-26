@@ -9,29 +9,41 @@ import commands.Parser;
 import commands.Validatable;
 import session.Session;
 
-/** Validates and builds commands that display all tasks. */
+/**
+ * Validates and builds commands that display all tasks.
+ */
 public final class ListCommand implements Validatable, Buildable {
-    /** The user input that selects this command type. */
+    /**
+     * The user input that selects this command type.
+     */
     public static final String COMMAND = "list";
 
-    /** Creates a list command handler. */
+    /**
+     * Creates a list command handler.
+     */
     public ListCommand() {
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public boolean check(List<ParsedToken> tokens, Session session) {
         return Validatable.hasTokenNames(tokens, Parser.DEFAULT_TOKEN)
                 && tokens.getFirst().value().isBlank();
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String hint() {
         return " Use 'list'.";
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Command build(List<ParsedToken> tokens, Session session) {
         return new Command(session) {

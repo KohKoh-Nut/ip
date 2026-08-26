@@ -6,19 +6,25 @@ import java.io.Reader;
 import commands.Parser;
 import session.Session;
 
-/** Runs Zabud, a command-line assistant that stores tasks for the current session. */
+/**
+ * Runs Zabud, a command-line assistant that stores tasks for the current session.
+ */
 public class Zabud {
-    /** The line printed between sections of the command-line interface. */
+    /**
+     * The line printed between sections of the command-line interface.
+     */
     private static final String SEPARATOR = "____________________________________________________________";
 
-    /** Prevents instantiation of this application entry-point class. */
+    /**
+     * Prevents instantiation of this application entry-point class.
+     */
     private Zabud() {
     }
 
     /**
      * Starts Zabud and delegates each line of input to the command dispatcher.
      *
-     * @param args command-line arguments; not used by this application
+     * @param args command-line arguments; not used by this application.
      */
     public static void main(String[] args) {
         Session session = new Session();
@@ -28,7 +34,9 @@ public class Zabud {
         else runInteractiveInput(session);
     }
 
-    /** Processes line-oriented input used by tests, pipes, and redirected input. */
+    /**
+     * Processes line-oriented input used by tests, pipes, and redirected input.
+     */
     private static void runPipedInput(Session session) {
         try (BufferedReader reader = new BufferedReader(new InputStreamReader(System.in))) {
             String line;
@@ -41,7 +49,9 @@ public class Zabud {
         }
     }
 
-    /** Runs a small raw-mode line editor with history and escape-key controls. */
+    /**
+     * Runs a small raw-mode line editor with history and escape-key controls.
+     */
     private static void runInteractiveInput(Session session) {
         setTerminalMode(false);
         try {
@@ -71,7 +81,9 @@ public class Zabud {
         } finally { setTerminalMode(true); }
     }
 
-    /** Interprets arrow-key history navigation or clears the line for a bare escape. */
+    /**
+     * Interprets arrow-key history navigation or clears the line for a bare escape.
+     */
     private static void handleEscape(Reader reader, StringBuilder current, Session session) throws IOException {
         if (!reader.ready()) {
             current.setLength(0);
@@ -93,12 +105,16 @@ public class Zabud {
         redraw(current);
     }
 
-    /** Replaces the visible input line with the current editor value. */
+    /**
+     * Replaces the visible input line with the current editor value.
+     */
     private static void redraw(StringBuilder current) {
         System.out.print("\r\033[2K> " + current);
     }
 
-    /** Switches the terminal between canonical and raw input modes when available. */
+    /**
+     * Switches the terminal between canonical and raw input modes when available.
+     */
     private static void setTerminalMode(boolean restore) {
         try {
             new ProcessBuilder("sh", "-c", restore ? "stty sane" : "stty -icanon -echo").inheritIO().start().waitFor();
@@ -107,7 +123,9 @@ public class Zabud {
         }
     }
 
-    /** Prints the welcome banner and greeting. */
+    /**
+     * Prints the welcome banner and greeting.
+     */
     private static void printWelcome() {
         String banner =
                 "███████╗  █████╗  ██████╗  ██╗   ██╗ ██████╗\n" +

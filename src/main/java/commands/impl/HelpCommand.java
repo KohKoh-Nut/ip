@@ -11,29 +11,41 @@ import commands.Validatable;
 import commands.tokens.DateTimeToken;
 import session.Session;
 
-/** Validates and builds commands that display usage guidance. */
+/**
+ * Validates and builds commands that display usage guidance.
+ */
 public final class HelpCommand implements Validatable, Buildable {
-    /** The user input that selects this command type. */
+    /**
+     * The user input that selects this command type.
+     */
     public static final String COMMAND = "help";
 
-    /** Creates a help command handler. */
+    /**
+     * Creates a help command handler.
+     */
     public HelpCommand() {
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public boolean check(List<ParsedToken> tokens, Session session) {
         return Validatable.hasTokenNames(tokens, Parser.DEFAULT_TOKEN)
                 && tokens.getFirst().value().isBlank();
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String hint() {
         return " Use 'help'.";
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Command build(List<ParsedToken> tokens, Session session) {
         return new Command(session) {
@@ -44,7 +56,9 @@ public final class HelpCommand implements Validatable, Buildable {
         };
     }
 
-    /** Prints all available command syntax and input requirements. */
+    /**
+     * Prints all available command syntax and input requirements.
+     */
     private static void printHelp() {
         DateTimeToken by = new DateTimeToken("by", "");
         DateTimeToken from = new DateTimeToken("from", "");

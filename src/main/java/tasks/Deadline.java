@@ -3,17 +3,23 @@ package tasks;
 import java.time.LocalDate;
 import java.time.LocalTime;
 
-/** Represents a task that must be completed by a specified time. */
+/**
+ * Represents a task that must be completed by a specified time.
+ */
 public class Deadline extends Task {
-    /** Deadline date, or {@code null} for a time-only deadline. */
+    /**
+     * Deadline date, or {@code null} for a time-only deadline.
+     */
     private final LocalDate date;
-    /** Deadline time, or {@code null} for a date-only deadline. */
+    /**
+     * Deadline time, or {@code null} for a date-only deadline.
+     */
     private final LocalTime time;
 
     /**
      * Returns the deadline date.
      *
-     * @return deadline date, or {@code null} for a time-only deadline
+     * @return deadline date, or {@code null} for a time-only deadline.
      */
     public LocalDate getDate() {
         return date;
@@ -22,13 +28,15 @@ public class Deadline extends Task {
     /**
      * Returns the deadline time.
      *
-     * @return deadline time, or {@code null} for a date-only deadline
+     * @return deadline time, or {@code null} for a date-only deadline.
      */
     public LocalTime getTime() {
         return time;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String[] getStorageDetails() {
         return new String[] {date == null ? "" : date.toString(), time == null ? "" : time.toString()};
@@ -37,9 +45,9 @@ public class Deadline extends Task {
     /**
      * Creates a deadline task.
      *
-     * @param description the text describing the task
-     * @param date deadline date, or {@code null} for a time-only deadline
-     * @param time deadline time, or {@code null} for a date-only deadline
+     * @param description the text describing the task.
+     * @param date deadline date, or {@code null} for a time-only deadline.
+     * @param time deadline time, or {@code null} for a date-only deadline.
      */
     public Deadline(String description, LocalDate date, LocalTime time) {
         super(description);
@@ -50,7 +58,7 @@ public class Deadline extends Task {
     /**
      * Returns the Duke code for deadline tasks.
      *
-     * @return {@code "D"}
+     * @return {@code "D"}.
      */
     @Override
     protected String getTaskType() {
@@ -60,7 +68,7 @@ public class Deadline extends Task {
     /**
      * Returns the deadline time as list details.
      *
-     * @return the deadline details formatted for the task list
+     * @return the deadline details formatted for the task list.
      */
     @Override
     protected String getAdditionalDetails() {
