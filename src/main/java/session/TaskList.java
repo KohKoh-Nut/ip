@@ -1,5 +1,8 @@
 package session;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import tasks.Task;
 
 /** Stores the tasks entered during one Zabud session. */
@@ -100,6 +103,23 @@ public class TaskList {
      */
     public int size() {
         return taskCount;
+    }
+
+    /**
+     * Returns tasks whose descriptions contain the supplied keyword.
+     * Matching is case-sensitive and preserves the tasks' entry order.
+     *
+     * @param keyword text to search for in each task description
+     * @return matching tasks in their original order
+     */
+    public List<Task> find(String keyword) {
+        List<Task> matchingTasks = new ArrayList<>();
+        for (int index = 0; index < taskCount; index++) {
+            if (tasks[index].getDescription().contains(keyword)) {
+                matchingTasks.add(tasks[index]);
+            }
+        }
+        return List.copyOf(matchingTasks);
     }
 
     /** Prints all tasks in their entry order. */

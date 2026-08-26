@@ -9,6 +9,7 @@ import commands.impl.ByeCommand;
 import commands.impl.DeadlineCommand;
 import commands.impl.DeleteCommand;
 import commands.impl.EventCommand;
+import commands.impl.FindCommand;
 import commands.impl.HelpCommand;
 import commands.impl.ListCommand;
 import commands.impl.MarkCommand;
@@ -28,6 +29,7 @@ public final class Parser {
     private static final Handler DEADLINE = handler(new DeadlineCommand());
     private static final Handler DELETE = handler(new DeleteCommand());
     private static final Handler EVENT = handler(new EventCommand());
+    private static final Handler FIND = handler(new FindCommand());
     private static final Handler HELP = handler(new HelpCommand());
     private static final Handler LIST = handler(new ListCommand());
     private static final Handler MARK = handler(new MarkCommand());
@@ -135,6 +137,7 @@ public final class Parser {
         case DeadlineCommand.COMMAND -> DEADLINE;
         case DeleteCommand.COMMAND -> DELETE;
         case EventCommand.COMMAND -> EVENT;
+        case FindCommand.COMMAND -> FIND;
         case HelpCommand.COMMAND -> HELP;
         case ListCommand.COMMAND -> LIST;
         case MarkCommand.COMMAND -> MARK;

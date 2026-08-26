@@ -9,6 +9,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.List;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
@@ -33,6 +34,19 @@ class SessionTest {
         assertEquals("task 0", list.remove(1).getDescription());
         assertEquals("task 1", list.get(1).getDescription());
         assertEquals(99, list.size());
+    }
+
+    @Test
+    void taskList_findKeyword_returnsMatchingTasksInEntryOrder() {
+        TaskList list = new TaskList();
+        Todo firstMatch = new Todo("read book");
+        Deadline secondMatch = new Deadline("return book", LocalDate.of(2019, 12, 2), null);
+        list.add(firstMatch);
+        list.add(new Todo("watch movie"));
+        list.add(secondMatch);
+
+        assertEquals(List.of(firstMatch, secondMatch), list.find("book"));
+        assertEquals(List.of(), list.find("Book"));
     }
 
     @Test

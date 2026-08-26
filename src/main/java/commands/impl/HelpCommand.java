@@ -54,6 +54,7 @@ public final class HelpCommand implements Validatable, Buildable {
         System.out.println("   deadline " + DESCRIPTION + " " + Token.composeHints(List.of(by)));
         System.out.println("   event " + DESCRIPTION + " " + Token.composeHints(List.of(from, to)));
         System.out.println("   list");
+        System.out.println("   find " + DESCRIPTION);
         System.out.println("   mark " + TASK_NUMBER);
         System.out.println("   unmark " + TASK_NUMBER);
         System.out.println("   delete " + TASK_NUMBER);
