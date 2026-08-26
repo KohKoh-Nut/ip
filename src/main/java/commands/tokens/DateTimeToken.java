@@ -1,9 +1,9 @@
 package commands.tokens;
 
+import java.time.DateTimeException;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
-import java.time.format.DateTimeParseException;
 import java.time.format.ResolverStyle;
 
 import commands.Token;
@@ -62,7 +62,10 @@ public final class DateTimeToken extends Token {
                 date = LocalDate.parse(parts[0], DATE);
                 time = parseTime(parts[1]);
             }
-        } catch (DateTimeParseException | NumberFormatException exception) { date = null; time = null; }
+        } catch (DateTimeException | NumberFormatException exception) {
+            date = null;
+            time = null;
+        }
     }
 
     private LocalTime parseTime(String text) {
