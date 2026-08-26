@@ -5,28 +5,40 @@ import java.util.List;
 
 import tasks.Task;
 
-/** Stores the tasks entered during one Zabud session. */
+/**
+ * Stores the tasks entered during one Zabud session.
+ */
 public class TaskList {
-    /** The maximum number of tasks in one session. */
+    /**
+     * The maximum number of tasks in one session.
+     */
     private static final int MAX_TASKS = 100;
 
-    /** Tasks stored in entry order. */
+    /**
+     * Tasks stored in entry order.
+     */
     private final Task[] tasks = new Task[MAX_TASKS];
 
-    /** Number of occupied elements in {@link #tasks}. */
+    /**
+     * Number of occupied elements in {@link #tasks}.
+     */
     private int taskCount;
 
-    /** Called after a mutation so the owning session can persist the list. */
+    /**
+     * Called after a mutation so the owning session can persist the list.
+     */
     private Runnable changeListener = () -> { };
 
-    /** Creates an empty task list. */
+    /**
+     * Creates an empty task list.
+     */
     public TaskList() {
     }
 
     /**
      * Sets the callback invoked after a task list mutation.
      *
-     * @param listener callback to invoke, or {@code null} to disable callbacks
+     * @param listener callback to invoke, or {@code null} to disable callbacks.
      */
     public void setChangeListener(Runnable listener) {
         changeListener = listener == null ? () -> { } : listener;
@@ -35,8 +47,8 @@ public class TaskList {
     /**
      * Adds a task while restoring persisted state without triggering a save.
      *
-     * @param task task being restored
-     * @return whether the task was added
+     * @param task task being restored.
+     * @return whether the task was added.
      */
     public boolean addLoaded(Task task) {
         return addInternal(task, false);
@@ -45,8 +57,8 @@ public class TaskList {
     /**
      * Adds a task when there is remaining capacity.
      *
-     * @param task the task to add
-     * @return whether the task was added
+     * @param task the task to add.
+     * @return whether the task was added.
      */
     public boolean add(Task task) {
         return addInternal(task, true);
@@ -64,8 +76,8 @@ public class TaskList {
     /**
      * Returns the task at a one-based number, or {@code null} when invalid.
      *
-     * @param taskNumber the one-based task number
-     * @return the requested task, or {@code null} if it does not exist
+     * @param taskNumber the one-based task number.
+     * @return the requested task, or {@code null} if it does not exist.
      */
     public Task get(int taskNumber) {
         if (taskNumber < 1 || taskNumber > taskCount) {
@@ -78,8 +90,8 @@ public class TaskList {
      * Removes and returns the task at a one-based number.
      * Tasks after the removed task are shifted forward to preserve their order.
      *
-     * @param taskNumber the one-based task number
-     * @return the removed task, or {@code null} if the number is invalid
+     * @param taskNumber the one-based task number.
+     * @return the removed task, or {@code null} if the number is invalid.
      */
     public Task remove(int taskNumber) {
         Task task = get(taskNumber);
@@ -99,7 +111,7 @@ public class TaskList {
     /**
      * Returns the number of tasks currently stored.
      *
-     * @return the number of tasks
+     * @return the number of tasks.
      */
     public int size() {
         return taskCount;
@@ -109,8 +121,8 @@ public class TaskList {
      * Returns tasks whose descriptions contain the supplied keyword.
      * Matching is case-sensitive and preserves the tasks' entry order.
      *
-     * @param keyword text to search for in each task description
-     * @return matching tasks in their original order
+     * @param keyword text to search for in each task description.
+     * @return matching tasks in their original order.
      */
     public List<Task> find(String keyword) {
         List<Task> matchingTasks = new ArrayList<>();
@@ -122,7 +134,9 @@ public class TaskList {
         return List.copyOf(matchingTasks);
     }
 
-    /** Prints all tasks in their entry order. */
+    /**
+     * Prints all tasks in their entry order.
+     */
     public void printTasks() {
         System.out.println(" Here are the tasks in your list:");
         for (int i = 0; i < taskCount; i++) {

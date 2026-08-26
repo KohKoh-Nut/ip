@@ -3,12 +3,14 @@ package commands;
 import session.Session;
 import tasks.Task;
 
-/** Provides shared behavior for commands that add a task. */
+/**
+ * Provides shared behavior for commands that add a task.
+ */
 public abstract class TaskCommand extends Command {
     /**
      * Creates a command that adds a task.
      *
-     * @param session the current session
+     * @param session the current session.
      */
     protected TaskCommand(Session session) {
         super(session);
@@ -17,7 +19,7 @@ public abstract class TaskCommand extends Command {
     /**
      * Adds a task and prints the common confirmation.
      *
-     * @param task the validated task to add
+     * @param task the validated task to add.
      */
     protected void addTask(Task task) {
         if (session.getTaskList().add(task)) {

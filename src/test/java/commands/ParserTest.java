@@ -18,7 +18,9 @@ import tasks.Deadline;
 import tasks.Event;
 import tasks.Todo;
 
-/** Tests command-line parsing, validation, and end-to-end command execution. */
+/**
+ * Tests command-line parsing, validation, and end-to-end command execution.
+ */
 class ParserTest {
     @TempDir
     Path temporaryDirectory;

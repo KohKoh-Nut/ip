@@ -16,16 +16,20 @@ import tasks.Event;
 import tasks.Task;
 import tasks.Todo;
 
-/** Reads and writes all persistent session data using a small, escaped text format. */
+/**
+ * Reads and writes all persistent session data using a small, escaped text format.
+ */
 final class SessionStorage {
-    /** Record type used for command-history entries. */
+    /**
+     * Record type used for command-history entries.
+     */
     private static final String COMMAND_RECORD = "C";
 
     /**
      * Loads session data, treating a missing or unreadable file as an empty session.
      *
-     * @param path file to read
-     * @return tasks and command history decoded from the file
+     * @param path file to read.
+     * @return tasks and command history decoded from the file.
      */
     public SessionData load(Path path) {
         try {
@@ -49,10 +53,10 @@ final class SessionStorage {
     /**
      * Saves all tasks and command history, creating the parent directory when necessary.
      *
-     * @param path file to write
-     * @param taskList tasks to encode
-     * @param commandHistory commands to encode in chronological order
-     * @throws IOException if the file cannot be written
+     * @param path file to write.
+     * @param taskList tasks to encode.
+     * @param commandHistory commands to encode in chronological order.
+     * @throws IOException if the file cannot be written.
      */
     public void save(Path path, TaskList taskList, List<String> commandHistory) throws IOException {
         if (path.getParent() != null) Files.createDirectories(path.getParent());
@@ -111,11 +115,13 @@ final class SessionStorage {
     /**
      * Immutable session data returned by {@link #load(Path)}.
      *
-     * @param tasks tasks restored for the session
-     * @param commandHistory commands restored in chronological order
+     * @param tasks tasks restored for the session.
+     * @param commandHistory commands restored in chronological order.
      */
     public record SessionData(List<Task> tasks, List<String> commandHistory) {
-        /** Copies loaded collections to prevent callers from modifying the stored result. */
+        /**
+         * Copies loaded collections to prevent callers from modifying the stored result.
+         */
         public SessionData {
             tasks = List.copyOf(tasks);
             commandHistory = List.copyOf(commandHistory);

@@ -9,29 +9,41 @@ import commands.Parser;
 import commands.Validatable;
 import session.Session;
 
-/** Validates and builds commands that end the current session. */
+/**
+ * Validates and builds commands that end the current session.
+ */
 public final class ByeCommand implements Validatable, Buildable {
-    /** The user input that selects this command type. */
+    /**
+     * The user input that selects this command type.
+     */
     public static final String COMMAND = "bye";
 
-    /** Creates a bye command handler. */
+    /**
+     * Creates a bye command handler.
+     */
     public ByeCommand() {
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public boolean check(List<ParsedToken> tokens, Session session) {
         return Validatable.hasTokenNames(tokens, Parser.DEFAULT_TOKEN)
                 && tokens.getFirst().value().isBlank();
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String hint() {
         return " Use 'bye'.";
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Command build(List<ParsedToken> tokens, Session session) {
         return new Command(session) {

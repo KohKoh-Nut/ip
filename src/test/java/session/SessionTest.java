@@ -18,7 +18,9 @@ import tasks.Deadline;
 import tasks.Event;
 import tasks.Todo;
 
-/** Tests task-list boundaries plus session history and persistence failure cases. */
+/**
+ * Tests task-list boundaries plus session history and persistence failure cases.
+ */
 class SessionTest {
     @TempDir
     Path temporaryDirectory;
