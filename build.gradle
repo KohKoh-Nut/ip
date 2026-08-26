@@ -39,7 +39,7 @@ test {
 }
 
 application {
-    mainClass = 'Zabud'
+    mainClass = 'zabud.Zabud'
 }
 
 jar {
