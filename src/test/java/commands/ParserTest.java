@@ -41,7 +41,7 @@ class ParserTest {
         for (String input : List.of("unknown value", "todo", "todo /by tomorrow", "deadline test /when 1200",
                 "deadline /by 1200", "deadline test /by 31/2/2019", "event meeting /to 1900 /from 1800",
                 "event meeting /from 2400 /to 1800", "list extra", "bye later", "mark 1", "delete 0",
-                "unmark nope")) {
+                "unmark nope", "find", "find book /by tomorrow")) {
             assertFalse(Parser.check(Parser.parse(input), session), input);
         }
         assertTrue(Parser.hint(Parser.parse("unknown")).contains("Unknown command"));
@@ -68,6 +68,7 @@ class ParserTest {
         assertTrue(Parser.invoke("unmark 1", session));
         assertFalse(session.getTaskList().get(1).isDone());
         assertTrue(Parser.invoke("list", session));
+        assertTrue(Parser.invoke("find book", session));
         assertTrue(Parser.invoke("help", session));
         assertTrue(Parser.invoke("delete 2", session));
         assertEquals(2, session.getTaskList().size());
