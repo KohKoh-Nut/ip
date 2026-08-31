@@ -55,10 +55,10 @@ public final class EventCommand implements Validatable, Buildable {
      */
     @Override
     public String hint() {
-        List<DateTimeToken> hintTokens = List.of(
-                new DateTimeToken(FROM_TOKEN, ""), new DateTimeToken(TO_TOKEN, ""));
-        return Validatable.formatHint(COMMAND + " " + DESCRIPTION + " " + Token.composeHints(hintTokens),
-                DESCRIPTION_REQUIREMENT, Token.composeRequirements(hintTokens));
+        DateTimeToken from = new DateTimeToken(FROM_TOKEN, "");
+        DateTimeToken to = new DateTimeToken(TO_TOKEN, "");
+        return Validatable.formatHint(COMMAND + " " + DESCRIPTION + " " + Token.composeHints(from, to),
+                DESCRIPTION_REQUIREMENT, Token.composeRequirements(from, to));
     }
 
     /**

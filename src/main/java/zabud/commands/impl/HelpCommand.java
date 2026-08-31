@@ -65,8 +65,8 @@ public final class HelpCommand implements Validatable, Buildable {
         DateTimeToken to = new DateTimeToken("to", "");
         System.out.println(" Available commands:");
         System.out.println("   todo " + DESCRIPTION);
-        System.out.println("   deadline " + DESCRIPTION + " " + Token.composeHints(List.of(by)));
-        System.out.println("   event " + DESCRIPTION + " " + Token.composeHints(List.of(from, to)));
+        System.out.println("   deadline " + DESCRIPTION + " " + Token.composeHints(by));
+        System.out.println("   event " + DESCRIPTION + " " + Token.composeHints(from, to));
         System.out.println("   list");
         System.out.println("   find " + DESCRIPTION);
         System.out.println("   mark " + TASK_NUMBER);
@@ -78,6 +78,6 @@ public final class HelpCommand implements Validatable, Buildable {
         System.out.println(" Details:");
         System.out.println(DESCRIPTION_REQUIREMENT);
         System.out.println(TASK_NUMBER_REQUIREMENT);
-        System.out.println(Token.composeRequirements(List.of(by, from, to)));
+        System.out.println(Token.composeRequirements(by, from, to));
     }
 }
