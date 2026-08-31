@@ -14,5 +14,6 @@ class GuiResourcesTest {
         assertNotNull(DialogBox.class.getResource("/view/DialogBox.fxml"));
         assertNotNull(MainWindow.class.getResource("/images/DaUser.png"));
         assertNotNull(MainWindow.class.getResource("/images/DaDuke.png"));
+        assertNotNull(Main.class.getResource("/css/main.css"));
     }
 }

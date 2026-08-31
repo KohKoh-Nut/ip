@@ -45,7 +45,9 @@ public class DialogBox extends HBox {
      * @return user dialog box.
      */
     public static DialogBox getUserDialog(String text, Image image) {
-        return new DialogBox(text, image);
+        DialogBox dialogBox = new DialogBox(text, image);
+        dialogBox.getStyleClass().add("user-dialog");
+        return dialogBox;
     }
 
     /**
@@ -67,5 +69,6 @@ public class DialogBox extends HBox {
     private void flip() {
         Collections.reverse(getChildren());
         setAlignment(Pos.TOP_LEFT);
+        getStyleClass().add("zabud-dialog");
     }
 }

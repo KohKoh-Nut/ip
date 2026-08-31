@@ -1,6 +1,7 @@
 package zabud.gui;
 
 import java.io.IOException;
+import java.util.Objects;
 
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -30,7 +31,9 @@ public class Main extends Application {
         AnchorPane root = loader.load();
         loader.<MainWindow>getController().setZabud(zabud);
 
-        stage.setScene(new Scene(root));
+        Scene scene = new Scene(root);
+        scene.getStylesheets().add(Objects.requireNonNull(Main.class.getResource("/css/main.css")).toExternalForm());
+        stage.setScene(scene);
         stage.setTitle("Zabud");
         stage.setMinHeight(500);
         stage.setMinWidth(400);
