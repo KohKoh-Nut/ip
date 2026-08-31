@@ -1,7 +1,6 @@
 package zabud.gui;
 
 import java.io.IOException;
-import java.util.Collections;
 
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -67,7 +66,7 @@ public class DialogBox extends HBox {
      * Moves the avatar to the left side for Zabud responses.
      */
     private void flip() {
-        Collections.reverse(getChildren());
+        getChildren().setAll(displayPicture, dialog);
         setAlignment(Pos.TOP_LEFT);
         getStyleClass().add("zabud-dialog");
     }
