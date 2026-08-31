@@ -1,11 +1,10 @@
 # Zabud
 
-Zabud is a command-line chatbot for managing to-dos, deadlines, and events. Tasks and command history are saved automatically between sessions.
+Zabud is a JavaFX chatbot for managing to-dos, deadlines, and events. Tasks and command history are saved automatically between sessions.
 
 ## Requirements
 
 - JDK 25
-- A terminal with standard ANSI controls for interactive command-history navigation
 
 Confirm that Java 25 is active:
 
@@ -16,34 +15,27 @@ javac -version
 
 ## Build and run
 
-From the project root, compile the application:
+From the project root, build and start the JavaFX application:
 
 ```bash
-mkdir -p out
-javac --release 25 -d out $(find src/main/java -name '*.java')
+./gradlew run
 ```
 
-Then start Zabud:
+To create and run the cross-platform executable JAR instead:
 
 ```bash
-java -cp out Zabud
+./gradlew clean shadowJar
+java -jar build/libs/duke.jar
 ```
 
 Enter `help` at any time to display the available commands and input requirements.
 
 ## Test
 
-Compile the application and regression tests for Java 25, then run every test with assertions enabled:
+Run the JUnit suite and both course Checkstyle tasks:
 
 ```bash
-mkdir -p out
-javac --release 25 -d out $(find src/main/java src/test/java -name '*.java')
-java -ea -cp out commands.ParserTest
-java -ea -cp out commands.TokenTest
-java -ea -cp out commands.TaskCommandTest
-java -ea -cp out commands.CommandHintTest
-java -ea -cp out session.SessionHistoryTest
-java -ea -cp out session.SessionStorageTest
+./gradlew test checkstyleMain checkstyleTest
 ```
 
 ## Commands
@@ -99,7 +91,7 @@ is parsed as:
 
 Every type in `commands.impl` implements `Validatable` and `Buildable`. The parser uses the
 `command` value to select the corresponding command handler, then removes the command entry. It
-calls `check()` on that handler before construction. Valid input is passed to `build()` and the
+calls `isValid()` on that handler before construction. Valid input is passed to `build()` and the
 returned command is executed; invalid input prints the same handler's `hint()` without calling
 `build()`. Plain values such as `default` are handled directly, while typed values such as `/by`,
 `/from`, and `/to` are checked by `DateTimeToken`.
