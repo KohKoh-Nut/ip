@@ -47,9 +47,9 @@ public final class DeadlineCommand implements Validatable, Buildable {
      */
     @Override
     public String hint() {
-        List<DateTimeToken> hintTokens = List.of(new DateTimeToken(BY_TOKEN, ""));
-        return Validatable.formatHint(COMMAND + " " + DESCRIPTION + " " + Token.composeHints(hintTokens),
-                DESCRIPTION_REQUIREMENT, Token.composeRequirements(hintTokens));
+        DateTimeToken by = new DateTimeToken(BY_TOKEN, "");
+        return Validatable.formatHint(COMMAND + " " + DESCRIPTION + " " + Token.composeHints(by),
+                DESCRIPTION_REQUIREMENT, Token.composeRequirements(by));
     }
 
     /**

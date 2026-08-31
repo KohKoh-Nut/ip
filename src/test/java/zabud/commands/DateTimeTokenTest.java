@@ -41,10 +41,10 @@ class DateTimeTokenTest {
 
     @Test
     void producesDeduplicatedTokenHelp() {
-        assertEquals("/by DATE_OR_TIME", Token.composeHints(List.of(new DateTimeToken("by", ""))));
+        assertEquals("/by DATE_OR_TIME", Token.composeHints(new DateTimeToken("by", "")));
         assertEquals(" - DATE_OR_TIME: enter a date as DD/MM/YYYY, a 24-hour time as HHMM, "
                         + "or both as DD/MM/YYYY HHMM.",
-                Token.composeRequirements(List.of(new DateTimeToken("from", ""), new DateTimeToken("to", ""))));
+                Token.composeRequirements(new DateTimeToken("from", ""), new DateTimeToken("to", "")));
         assertTrue(new DateTimeToken("/by", "1200").isValid());
     }
 }

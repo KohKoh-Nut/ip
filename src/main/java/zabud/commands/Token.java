@@ -1,7 +1,7 @@
 package zabud.commands;
 
+import java.util.Arrays;
 import java.util.LinkedHashMap;
-import java.util.List;
 import java.util.stream.Collectors;
 
 /**
@@ -34,8 +34,8 @@ public abstract class Token {
      * @param tokens tokens in command syntax order.
      * @return token names and their value hints, separated by spaces.
      */
-    public static String composeHints(List<? extends Token> tokens) {
-        return tokens.stream()
+    public static String composeHints(Token... tokens) {
+        return Arrays.stream(tokens)
                 .map(token -> "/" + token.name + " " + token.hint())
                 .collect(Collectors.joining(" "));
     }
@@ -47,7 +47,7 @@ public abstract class Token {
      * @param tokens tokens whose value requirements should be described.
      * @return distinct requirement lines separated by newlines.
      */
-    public static String composeRequirements(List<? extends Token> tokens) {
+    public static String composeRequirements(Token... tokens) {
         LinkedHashMap<String, String> requirements = new LinkedHashMap<>();
         for (Token token : tokens) {
             requirements.putIfAbsent(token.hint(), token.requirement());
