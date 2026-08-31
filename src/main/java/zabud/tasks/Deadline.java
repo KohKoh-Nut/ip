@@ -17,6 +17,19 @@ public class Deadline extends Task {
     private final LocalTime time;
 
     /**
+     * Creates a deadline task.
+     *
+     * @param description the text describing the task.
+     * @param date deadline date, or {@code null} for a time-only deadline.
+     * @param time deadline time, or {@code null} for a date-only deadline.
+     */
+    public Deadline(String description, LocalDate date, LocalTime time) {
+        super(description);
+        this.date = date;
+        this.time = time;
+    }
+
+    /**
      * Returns the deadline date.
      *
      * @return deadline date, or {@code null} for a time-only deadline.
@@ -40,19 +53,6 @@ public class Deadline extends Task {
     @Override
     public String[] getStorageDetails() {
         return new String[] {date == null ? "" : date.toString(), time == null ? "" : time.toString()};
-    }
-
-    /**
-     * Creates a deadline task.
-     *
-     * @param description the text describing the task.
-     * @param date deadline date, or {@code null} for a time-only deadline.
-     * @param time deadline time, or {@code null} for a date-only deadline.
-     */
-    public Deadline(String description, LocalDate date, LocalTime time) {
-        super(description);
-        this.date = date;
-        this.time = time;
     }
 
     /**

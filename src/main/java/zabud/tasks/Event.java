@@ -26,6 +26,23 @@ public class Event extends Task {
     private final LocalTime toTime;
 
     /**
+     * Creates an event task.
+     *
+     * @param description the text describing the event.
+     * @param fromDate event start date, or {@code null} when absent.
+     * @param fromTime event start time, or {@code null} when absent.
+     * @param toDate event end date, or {@code null} when absent.
+     * @param toTime event end time, or {@code null} when absent.
+     */
+    public Event(String description, LocalDate fromDate, LocalTime fromTime, LocalDate toDate, LocalTime toTime) {
+        super(description);
+        this.fromDate = fromDate;
+        this.fromTime = fromTime;
+        this.toDate = toDate;
+        this.toTime = toTime;
+    }
+
+    /**
      * {@inheritDoc}
      */
     @Override
@@ -65,23 +82,6 @@ public class Event extends Task {
      */
     public LocalTime getToTime() {
         return toTime;
-    }
-
-    /**
-     * Creates an event task.
-     *
-     * @param description the text describing the event.
-     * @param fromDate event start date, or {@code null} when absent.
-     * @param fromTime event start time, or {@code null} when absent.
-     * @param toDate event end date, or {@code null} when absent.
-     * @param toTime event end time, or {@code null} when absent.
-     */
-    public Event(String description, LocalDate fromDate, LocalTime fromTime, LocalDate toDate, LocalTime toTime) {
-        super(description);
-        this.fromDate = fromDate;
-        this.fromTime = fromTime;
-        this.toDate = toDate;
-        this.toTime = toTime;
     }
 
     /**
