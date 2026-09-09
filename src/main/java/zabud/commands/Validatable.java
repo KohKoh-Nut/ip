@@ -1,6 +1,7 @@
 package zabud.commands;
 
 import java.util.List;
+import java.util.stream.IntStream;
 
 import zabud.session.Session;
 
@@ -62,15 +63,8 @@ public interface Validatable {
      * @return whether the parsed values match the command syntax.
      */
     static boolean hasTokenNames(List<ParsedToken> tokens, String... names) {
-        if (tokens.size() != names.length) {
-            return false;
-        }
-        for (int index = 0; index < names.length; index++) {
-            if (!tokens.get(index).name().equals(names[index])) {
-                return false;
-            }
-        }
-        return true;
+        return tokens.size() == names.length
+                && IntStream.range(0, names.length).allMatch(index -> tokens.get(index).name().equals(names[index]));
     }
 
     /**
