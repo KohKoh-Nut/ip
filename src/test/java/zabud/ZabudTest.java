@@ -24,6 +24,10 @@ class ZabudTest {
         Zabud.Response added = zabud.getResponse("todo read book");
         assertTrue(added.message().contains("read book"));
         assertTrue(added.shouldContinue());
+        assertFalse(added.isError());
+
+        Zabud.Response invalid = zabud.getResponse("todo");
+        assertTrue(invalid.isError());
 
         Zabud.Response listed = zabud.getResponse("list");
         assertTrue(listed.message().contains("1.[T][ ] read book"));
@@ -31,5 +35,6 @@ class ZabudTest {
         Zabud.Response exit = zabud.getResponse("bye");
         assertTrue(exit.message().contains("Hope to see you again soon"));
         assertFalse(exit.shouldContinue());
+        assertFalse(exit.isError());
     }
 }
