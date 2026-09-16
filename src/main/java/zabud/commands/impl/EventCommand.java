@@ -1,5 +1,6 @@
 package zabud.commands.impl;
 
+import java.time.LocalTime;
 import java.util.List;
 
 import zabud.commands.Buildable;
@@ -29,6 +30,11 @@ public final class EventCommand implements Validatable, Buildable {
      * Name of the token introducing the event end.
      */
     private static final String TO_TOKEN = "to";
+    /**
+     * Requirement shown when an event's time range is invalid.
+     */
+    private static final String RANGE_REQUIREMENT =
+            " - Event range: /to must be later than /from, and both values must include dates or both omit them.";
 
     /**
      * Creates an event command handler.
@@ -47,7 +53,7 @@ public final class EventCommand implements Validatable, Buildable {
         }
         DateTimeToken from = new DateTimeToken(FROM_TOKEN, tokens.get(1).value());
         DateTimeToken to = new DateTimeToken(TO_TOKEN, tokens.get(2).value());
-        return from.isValid() && to.isValid();
+        return from.isValid() && to.isValid() && endsAfterStart(from, to);
     }
 
     /**
@@ -58,7 +64,7 @@ public final class EventCommand implements Validatable, Buildable {
         DateTimeToken from = new DateTimeToken(FROM_TOKEN, "");
         DateTimeToken to = new DateTimeToken(TO_TOKEN, "");
         return Validatable.formatHint(COMMAND + " " + DESCRIPTION + " " + Token.composeHints(from, to),
-                DESCRIPTION_REQUIREMENT, Token.composeRequirements(from, to));
+                DESCRIPTION_REQUIREMENT, Token.composeRequirements(from, to), RANGE_REQUIREMENT);
     }
 
     /**
@@ -75,5 +81,20 @@ public final class EventCommand implements Validatable, Buildable {
                 addTask(new Event(description, from.getDate(), from.getTime(), to.getDate(), to.getTime()));
             }
         };
+    }
+
+    /**
+     * Checks that comparable event endpoints form a strictly increasing range.
+     */
+    private static boolean endsAfterStart(DateTimeToken from, DateTimeToken to) {
+        if ((from.getDate() == null) != (to.getDate() == null)) {
+            return false;
+        }
+        if (from.getDate() == null) {
+            return to.getTime().isAfter(from.getTime());
+        }
+        LocalTime fromTime = from.getTime() == null ? LocalTime.MIN : from.getTime();
+        LocalTime toTime = to.getTime() == null ? LocalTime.MIN : to.getTime();
+        return to.getDate().atTime(toTime).isAfter(from.getDate().atTime(fromTime));
     }
 }
