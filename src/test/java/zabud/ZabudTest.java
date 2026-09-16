@@ -37,4 +37,16 @@ class ZabudTest {
         assertFalse(exit.shouldContinue());
         assertFalse(exit.isError());
     }
+
+    @Test
+    void getResponse_reportsStorageFailureWithoutDiscardingCommandOutput() {
+        Zabud zabud = new Zabud(new Session(temporaryDirectory));
+
+        Zabud.Response response = zabud.getResponse("todo hold court");
+
+        assertTrue(response.message().contains("could not save your session"));
+        assertTrue(response.message().contains("hold court"));
+        assertTrue(response.shouldContinue());
+        assertFalse(response.isError());
+    }
 }
