@@ -66,7 +66,7 @@ public class MainWindow extends AnchorPane {
         Zabud.Response response = zabud.getResponse(input);
         dialogContainer.getChildren().addAll(
                 DialogBox.getUserDialog(input, userImage),
-                DialogBox.getZabudDialog(response.message(), zabudImage));
+                DialogBox.getZabudDialog(response.message(), zabudImage, response.isError()));
         userInput.clear();
 
         if (!response.shouldContinue()) {
