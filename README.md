@@ -25,7 +25,7 @@ To create and run the cross-platform executable JAR instead:
 
 ```bash
 ./gradlew clean shadowJar
-java -jar build/libs/duke.jar
+java -jar build/libs/zabud.jar
 ```
 
 Enter `help` at any time to display the available commands and input requirements.
@@ -54,6 +54,7 @@ Run the JUnit suite and both course Checkstyle tasks:
 | `bye` | Exits Zabud. |
 
 `DESCRIPTION` must contain at least one non-space character. `TASK_NUMBER` is the number shown beside an existing task in the task list.
+For events, `/to` must be later than `/from`; both endpoints must either include dates or both be time-only.
 
 ## Dates and times
 
