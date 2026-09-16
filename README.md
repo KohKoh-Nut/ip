@@ -46,6 +46,7 @@ Run the JUnit suite and both course Checkstyle tasks:
 | `deadline DESCRIPTION /by DATE_OR_TIME` | Adds a task with a deadline. |
 | `event DESCRIPTION /from DATE_OR_TIME /to DATE_OR_TIME` | Adds an event with a start and end. |
 | `list` | Displays all tasks. |
+| `find KEYWORD` | Finds tasks by case-insensitive partial description. |
 | `mark TASK_NUMBER` | Marks an existing task as completed. |
 | `unmark TASK_NUMBER` | Marks an existing task as incomplete. |
 | `delete TASK_NUMBER` | Deletes an existing task. |

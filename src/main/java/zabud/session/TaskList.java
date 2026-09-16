@@ -2,6 +2,7 @@ package zabud.session;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import zabud.tasks.Task;
 
@@ -120,16 +121,17 @@ public class TaskList {
     }
 
     /**
-     * Returns tasks whose descriptions contain the supplied keyword.
-     * Matching is case-sensitive and preserves the tasks' entry order.
+     * Returns tasks whose descriptions contain the supplied text.
+     * Matching is case-insensitive, supports partial words, and preserves entry order.
      *
      * @param keyword text to search for in each task description.
      * @return matching tasks in their original order.
      */
     public List<Task> find(String keyword) {
+        String normalizedKeyword = keyword.toLowerCase(Locale.ROOT);
         List<Task> matchingTasks = new ArrayList<>();
         for (int index = 0; index < taskCount; index++) {
-            if (tasks[index].getDescription().contains(keyword)) {
+            if (tasks[index].getDescription().toLowerCase(Locale.ROOT).contains(normalizedKeyword)) {
                 matchingTasks.add(tasks[index]);
             }
         }
