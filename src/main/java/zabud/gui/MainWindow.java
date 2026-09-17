@@ -51,6 +51,9 @@ public class MainWindow extends AnchorPane {
      */
     public void setZabud(Zabud zabud) {
         this.zabud = zabud;
+        dialogContainer.getChildren().add(DialogBox.getZabudDialog(
+                "Greetings, King Solomon. I am Zabud, your royal task keeper. Type 'help' to see my commands.",
+                zabudImage, false));
     }
 
     /**
@@ -66,7 +69,7 @@ public class MainWindow extends AnchorPane {
         Zabud.Response response = zabud.getResponse(input);
         dialogContainer.getChildren().addAll(
                 DialogBox.getUserDialog(input, userImage),
-                DialogBox.getZabudDialog(response.message(), zabudImage));
+                DialogBox.getZabudDialog(response.message(), zabudImage, response.isError()));
         userInput.clear();
 
         if (!response.shouldContinue()) {

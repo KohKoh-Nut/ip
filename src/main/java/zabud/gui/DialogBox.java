@@ -54,11 +54,15 @@ public class DialogBox extends HBox {
      *
      * @param text Zabud response.
      * @param image Zabud avatar.
+     * @param isError whether the response reports invalid input.
      * @return Zabud dialog box.
      */
-    public static DialogBox getZabudDialog(String text, Image image) {
+    public static DialogBox getZabudDialog(String text, Image image, boolean isError) {
         DialogBox dialogBox = new DialogBox(text, image);
         dialogBox.flip();
+        if (isError) {
+            dialogBox.getStyleClass().add("error-dialog");
+        }
         return dialogBox;
     }
 
