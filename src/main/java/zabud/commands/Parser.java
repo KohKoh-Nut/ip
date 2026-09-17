@@ -98,6 +98,7 @@ public final class Parser {
      * @return executable command selected by the command name.
      */
     public static Command build(List<ParsedToken> parsedTokens, Session session) {
+        assert isValid(parsedTokens, session) : "Only validated commands can be built";
         Handler handler = selectHandler(parsedTokens.getFirst().value());
         return handler.buildable().build(getArguments(parsedTokens), session);
     }

@@ -42,12 +42,15 @@ class ParserTest {
         Session session = new Session(temporaryDirectory.resolve("tasks.txt"));
         for (String input : List.of("unknown value", "todo", "todo /by tomorrow", "deadline test /when 1200",
                 "deadline /by 1200", "deadline test /by 31/2/2019", "event meeting /to 1900 /from 1800",
-                "event meeting /from 2400 /to 1800", "list extra", "bye later", "mark 1", "delete 0",
+                "event meeting /from 2400 /to 1800", "event meeting /from 1800 /to 1800",
+                "event meeting /from 1900 /to 1800", "event meeting /from 2/12/2019 /to 1800",
+                "event meeting /from 3/12/2019 /to 2/12/2019", "list extra", "bye later", "mark 1", "delete 0",
                 "unmark nope", "find", "find book /by tomorrow")) {
             assertFalse(Parser.isValid(Parser.parse(input), session), input);
         }
         assertTrue(Parser.hint(Parser.parse("unknown")).contains("Unknown command"));
         assertTrue(Parser.hint(List.of()).contains("Unknown command"));
+        assertTrue(Parser.hint(Parser.parse("event meeting /from 1900 /to 1800")).contains("later than"));
     }
 
     @Test
