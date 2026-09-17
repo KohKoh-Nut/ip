@@ -180,8 +180,10 @@ public class Zabud {
                     .inheritIO()
                     .start()
                     .waitFor();
-        } catch (IOException | InterruptedException exception) {
+        } catch (InterruptedException exception) {
             Thread.currentThread().interrupt();
+        } catch (IOException exception) {
+            // Raw terminal mode is optional; piped and GUI input remain usable.
         }
     }
 
