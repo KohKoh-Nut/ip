@@ -30,6 +30,12 @@
     -fx-text-fill: #152238;
 }
 
+.error-dialog .dialog-label {
+    -fx-background-color: #8f2d3d;
+    -fx-border-color: #ff9aaa;
+    -fx-border-radius: 12;
+}
+
 .avatar {
     -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.28), 8, 0.15, 0, 2);
 }

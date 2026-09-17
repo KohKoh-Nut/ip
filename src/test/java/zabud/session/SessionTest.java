@@ -41,7 +41,7 @@ class SessionTest {
     }
 
     @Test
-    void taskList_findKeyword_returnsMatchingTasksInEntryOrder() {
+    void taskList_findKeyword_matchesPartialTextIgnoringCaseInEntryOrder() {
         TaskList list = new TaskList();
         Todo firstMatch = new Todo("read book");
         Deadline secondMatch = new Deadline("return book", LocalDate.of(2019, 12, 2), null);
@@ -49,8 +49,9 @@ class SessionTest {
         list.add(new Todo("watch movie"));
         list.add(secondMatch);
 
-        assertEquals(List.of(firstMatch, secondMatch), list.find("book"));
-        assertEquals(List.of(), list.find("Book"));
+        assertEquals(List.of(firstMatch, secondMatch), list.find("BOOK"));
+        assertEquals(List.of(firstMatch, secondMatch), list.find("ook"));
+        assertEquals(List.of(), list.find("game"));
     }
 
     @Test
